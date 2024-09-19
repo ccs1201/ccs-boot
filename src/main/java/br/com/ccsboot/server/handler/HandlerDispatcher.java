@@ -71,7 +71,7 @@ public class HandlerDispatcher implements HttpHandler {
         Method[] methods = handlerObject.getClass().getMethods();
 
         // Obtém a classe da anotação correspondente ao método HTTP
-        Class<?> annotationType = HandlerMethodResolver.resolveMethodAnotedType(exchange.getRequestMethod());
+        Class<?> annotationType = EndpointMethodAnnotationMapper.resolveMethodAnotedType(exchange.getRequestMethod());
 
         for (Method method : methods) {
             // Verifica se o método está anotado com a anotação correspondente ao método HTTP

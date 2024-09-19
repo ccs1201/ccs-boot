@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,11 +19,12 @@ import java.util.Map;
 public class HandlerResolver {
 
     private static final Logger logger = LoggerFactory.getLogger(HandlerResolver.class);
-    private final Map<String, Object> controllerMap = new HashMap<>();
+    private final Map<String, Object> controllerMap;
 
     @Inject
     public HandlerResolver(@Any WeldInstance<EndpointController> controllers) {
         // Registra controladores com base na anotação @EndpointController
+        var map = new HashMap<String, Object>();
         for (Object controller : controllers) {
             Class<?> clazz = controller.getClass();
             if (clazz.isAnnotationPresent(Endpoint.class)) {
@@ -30,9 +32,10 @@ public class HandlerResolver {
                 if (!path.startsWith("/")) {
                     path = "/".concat(path);
                 }
-                controllerMap.put(path, controller);
+                map.put(path, controller);
             }
         }
+        controllerMap = Collections.unmodifiableMap(map);
         logger.info("HandlerResolver initialized with {} controllers.", controllerMap.size());
     }
 
