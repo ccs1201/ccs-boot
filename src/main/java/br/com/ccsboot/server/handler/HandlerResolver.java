@@ -25,7 +25,7 @@ public class HandlerResolver {
     public HandlerResolver(@Any WeldInstance<EndpointController> controllers) {
         // Registra controladores com base na anotação @EndpointController
         var map = new HashMap<String, Object>();
-        for (Object controller : controllers) {
+        for (EndpointController controller : controllers) {
             Class<?> clazz = controller.getClass();
             if (clazz.isAnnotationPresent(Endpoint.class)) {
                 String path = clazz.getAnnotation(Endpoint.class).value();
@@ -33,6 +33,8 @@ public class HandlerResolver {
                     path = "/".concat(path);
                 }
                 map.put(path, controller);
+            } else {
+                logger.warn("Controller {} is not annotated with @Endpoint", clazz.getName());
             }
         }
         controllerMap = Collections.unmodifiableMap(map);
