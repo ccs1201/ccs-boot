@@ -1,4 +1,7 @@
 package br.com.ccsboot.server.exceptions;
 
-public class MetodoNaoSupotadoException {
+public class MetodoNaoSuportadoException extends RuntimeException {
+    public MetodoNaoSuportadoException(String msg) {
+        super(msg);
+    }
 }

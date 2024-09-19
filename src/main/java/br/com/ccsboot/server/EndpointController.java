@@ -1,4 +1,4 @@
 package br.com.ccsboot.server;
 
-public interface Handler {
+public interface EndpointController {
 }

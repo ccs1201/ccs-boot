@@ -1,6 +1,6 @@
-package br.com.ccsboot;
+package br.com.ccsboot.server;
 
-import br.com.ccsboot.server.SimpleHttpServer;
+import br.com.ccsboot.server.http.SimpleHttpServer;
 import jakarta.inject.Inject;
 
 public class ServerLauncher {

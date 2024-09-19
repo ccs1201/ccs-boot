@@ -1,15 +1,13 @@
-package br.com.ccsboot.server;
+package br.com.ccsboot.server.http;
 
 import br.com.ccsboot.server.handler.HandlerResolver;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
+import br.com.ccsboot.server.handler.HanlderDispatcher;
 import com.sun.net.httpserver.HttpServer;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
 public class SimpleHttpServer {
@@ -18,6 +16,8 @@ public class SimpleHttpServer {
     private HttpServer server;
     @Inject
     private HandlerResolver resolver;
+    @Inject
+    private HanlderDispatcher hanlderDispatcher;
 
     public void start(int port, String contextPath) throws IOException {
         init(port, contextPath);
@@ -30,23 +30,9 @@ public class SimpleHttpServer {
         server = HttpServer.create(new InetSocketAddress(port), 0);
 
         // Define o handler para lidar com as requisições
-        server.createContext("/", new MyHttpHandler());
+        server.createContext("/", hanlderDispatcher);
 
         // Configura o executor (um thread pool)
-        server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
-    }
-
-    // Classe interna para lidar com as requisições HTTP
-    private static class MyHttpHandler implements HttpHandler {
-        @Override
-        public void handle(HttpExchange exchange) throws IOException {
-            // Resposta simples de "Hello, World!"
-            String response = "Hello, World!";
-            exchange.sendResponseHeaders(200, response.length());
-            OutputStream os = exchange.getResponseBody();
-            os.write(response.getBytes());
-//            os.close();
-            exchange.close();
-        }
+        server.setExecutor(ForkJoinPool.commonPool());
     }
 }
