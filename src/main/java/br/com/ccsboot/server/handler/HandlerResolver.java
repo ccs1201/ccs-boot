@@ -37,14 +37,14 @@ public class HandlerResolver {
         logger.info("HandlerResolver initialized with " + controllerMap.size() + " controllers.");
     }
 
-    public <T> T resolve(URI uri) {
+    public Object resolve(URI uri) {
         var controller = controllerMap.get(uri.getPath());
 
         if (controller == null) {
             throw new HandlerNotFoundException("No controller found for path: " + uri.getPath());
         }
         logger.info("Request send to controller: " + controller.getClass().getSimpleName());
-        return (T) controller;
+        return controller;
     }
 }
 
