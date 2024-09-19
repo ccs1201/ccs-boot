@@ -12,6 +12,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jackson.version>2.17.2</jackson.version>
+        <slf4j.version>2.0.16</slf4j.version>
     </properties>
 
     <dependencies>
@@ -46,6 +47,17 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
         <!-- Weld Core - Core do Weld -->
 <!--        <dependency>-->
 <!--            <groupId>org.jboss.weld</groupId>-->
@@ -59,26 +71,6 @@
 <!--            <artifactId>jakarta.enterprise.cdi-api</artifactId>-->
 <!--            <version>4.0.1</version>-->
 <!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash; Suporte ao Logging do Weld &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.jboss.slf4j</groupId>-->
-<!--            <artifactId>slf4j-jboss-logmanager</artifactId>-->
-<!--            <version>1.1.0.Final</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash; SLF4J para logging &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-api</artifactId>-->
-<!--            <version>1.7.36</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-simple</artifactId>-->
-<!--            <version>1.7.36</version>-->
 <!--        </dependency>-->
 
         <!-- Opcional: JUnit para testes -->

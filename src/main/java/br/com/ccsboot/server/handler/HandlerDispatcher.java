@@ -1,43 +1,38 @@
 package br.com.ccsboot.server.handler;
 
-import br.com.ccsboot.server.annotations.Endpoint;
-import br.com.ccsboot.server.exceptions.MetodoNaoSuportadoException;
-import br.com.ccsboot.server.http.enums.HttpMethod;
 import br.com.ccsboot.server.http.enums.HttpStatusCode;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import br.com.ccsboot.server.support.exceptions.ServerException;
+import br.com.ccsboot.server.support.exceptions.UnsupportedMethodException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.Map;
-import java.util.logging.Logger;
+import java.text.MessageFormat;
 
 @Singleton
-public class HanlderDispatcher implements HttpHandler {
+public class HandlerDispatcher implements HttpHandler {
 
-    private static final Logger logger = Logger.getLogger(HanlderDispatcher.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(HandlerDispatcher.class);
+    private HandlerResolver resolver;
+    private ObjectMapper objectMapper;
 
     @Inject
-    private HandlerResolver resolver;
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-
-    public HanlderDispatcher() {
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm a z"));
+    public HandlerDispatcher(HandlerResolver resolver, ObjectMapper objectMapper) {
+        this.resolver = resolver;
+        this.objectMapper = objectMapper;
     }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        logger.info("URI requisitada: " + exchange.getRequestURI());
+        logger.info("Requested URI: {} ", exchange.getRequestURI());
         try {
             var handlerObject = resolver.resolve(exchange.getRequestURI());
 
@@ -46,7 +41,7 @@ public class HanlderDispatcher implements HttpHandler {
                 return;
             }
 
-            var method = methodResolver(handlerObject, exchange.getRequestMethod());
+            var method = methodResolver(handlerObject, exchange);
             var returned = method.invoke(handlerObject);
 
             if (returned == null) {
@@ -67,15 +62,15 @@ public class HanlderDispatcher implements HttpHandler {
         } catch (IllegalAccessException | InvocationTargetException e) {
             sendError(exchange, HttpStatusCode.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
-            sendError(exchange, HttpStatusCode.BAD_REQUEST, e.getMessage());
+            sendError(exchange, e);
         }
     }
 
-    private Method methodResolver(Object handlerObject, String httpMethod) {
+    private Method methodResolver(Object handlerObject, HttpExchange exchange) {
         Method[] methods = handlerObject.getClass().getMethods();
 
         // Obtém a classe da anotação correspondente ao método HTTP
-        Class<?> annotationType = resolveMethodAnotedType(httpMethod);
+        Class<?> annotationType = HandlerMethodResolver.resolveMethodAnotedType(exchange.getRequestMethod());
 
         for (Method method : methods) {
             // Verifica se o método está anotado com a anotação correspondente ao método HTTP
@@ -85,27 +80,10 @@ public class HanlderDispatcher implements HttpHandler {
         }
 
         // Caso nenhum método seja encontrado lança uma exceção
-        throw new MetodoNaoSuportadoException("No method found for HTTP method: " + httpMethod);
-    }
-
-    private static final Map<String, Class<?>> HTTP_METHOD_MAP = Map.of(
-            HttpMethod.GET.name(), Endpoint.GET.class,
-            HttpMethod.POST.name(), Endpoint.POST.class,
-            HttpMethod.PUT.name(), Endpoint.PUT.class,
-            HttpMethod.DELETE.name(), Endpoint.DELETE.class
-    );
-
-    public static Class<?> resolveMethodAnotedType(String httpMethod) {
-        if (httpMethod == null || httpMethod.isEmpty()) {
-            throw new IllegalArgumentException("HTTP method cannot be null or empty");
-        }
-
-        Class<?> endpointAnnotation = HTTP_METHOD_MAP.get(httpMethod.toUpperCase());
-        if (endpointAnnotation == null) {
-            throw new MetodoNaoSuportadoException("HTTP method not supported: " + httpMethod);
-        }
-
-        return endpointAnnotation;
+        throw new UnsupportedMethodException(
+                MessageFormat.format("No handler found for HTTP method: {0} in path {1}",
+                        exchange.getRequestMethod(),
+                        exchange.getRequestURI().getPath()));
     }
 
     private static void sendError(HttpExchange exchange, HttpStatusCode statusCode) throws IOException {
@@ -113,10 +91,19 @@ public class HanlderDispatcher implements HttpHandler {
         exchange.close();
     }
 
-    private static void sendError(HttpExchange exchange, HttpStatusCode statusCode, String body) throws IOException {
-        exchange.sendResponseHeaders(statusCode.getCode(), body.getBytes().length);
+    private static void sendError(HttpExchange exchange, Exception exception) throws IOException {
+
+        logger.error("Handler dispatcher error ", exception);
+
+        var code = HttpStatusCode.INTERNAL_SERVER_ERROR.getCode();
+
+        if (exception instanceof ServerException e) {
+            code = e.getStatusCode().getCode();
+        }
+
+        exchange.sendResponseHeaders(code, exception.getMessage().getBytes().length);
         var os = exchange.getResponseBody();
-        os.write(body.getBytes());
+        os.write(exception.getMessage().getBytes());
         exchange.close();
     }
 

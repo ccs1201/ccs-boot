@@ -9,7 +9,8 @@ public class CcsBoot {
     public static void main(String[] args) {
 
         // Inicializa o container CDI
-        try (SeContainer container = SeContainerInitializer.newInstance().initialize()) {
+        try {
+            SeContainer container = SeContainerInitializer.newInstance().initialize();
             // Injeta o SimpleHttpServer via CDI
             ServerLauncher serverLauncher = container.select(ServerLauncher.class).get();
             serverLauncher.start(8080, "/");

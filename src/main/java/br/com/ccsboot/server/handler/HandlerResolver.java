@@ -1,22 +1,23 @@
 package br.com.ccsboot.server.handler;
 
-import br.com.ccsboot.server.annotations.Endpoint;
 import br.com.ccsboot.server.EndpointController;
-import br.com.ccsboot.server.exceptions.HandlerNotFoundException;
+import br.com.ccsboot.server.annotations.Endpoint;
+import br.com.ccsboot.server.support.exceptions.HandlerNotFoundException;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jboss.weld.inject.WeldInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 @Singleton
 public class HandlerResolver {
 
-    private static final Logger logger = Logger.getLogger(HandlerResolver.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(HandlerResolver.class);
     private final Map<String, Object> controllerMap = new HashMap<>();
 
     @Inject
@@ -25,25 +26,30 @@ public class HandlerResolver {
         for (Object controller : controllers) {
             Class<?> clazz = controller.getClass();
             if (clazz.isAnnotationPresent(Endpoint.class)) {
-                Endpoint annotation = clazz.getAnnotation(Endpoint.class);
-                String path = annotation.value();
+                String path = clazz.getAnnotation(Endpoint.class).value();
                 if (!path.startsWith("/")) {
                     path = "/".concat(path);
                 }
                 controllerMap.put(path, controller);
             }
         }
-
-        logger.info("HandlerResolver initialized with " + controllerMap.size() + " controllers.");
+        logger.info("HandlerResolver initialized with {} controllers.", controllerMap.size());
     }
 
     public Object resolve(URI uri) {
-        var controller = controllerMap.get(uri.getPath());
+
+        var path = uri.getPath();
+
+        if (path.endsWith("/")) {
+            path = path.substring(0, path.length() - 1);
+        }
+
+        var controller = controllerMap.get(path);
 
         if (controller == null) {
-            throw new HandlerNotFoundException("No controller found for path: " + uri.getPath());
+            throw new HandlerNotFoundException("No handler found for path: " + uri.getPath());
         }
-        logger.info("Request send to controller: " + controller.getClass().getSimpleName());
+        logger.info("Request resolved to {}", controller.getClass());
         return controller;
     }
 }

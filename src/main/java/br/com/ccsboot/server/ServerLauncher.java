@@ -1,15 +1,28 @@
 package br.com.ccsboot.server;
 
 import br.com.ccsboot.server.http.SimpleHttpServer;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+@ApplicationScoped
 public class ServerLauncher {
 
-    @Inject
-    private SimpleHttpServer simpleHttpServer;
+    private static final Logger logger = LoggerFactory.getLogger(ServerLauncher.class);
+    private final SimpleHttpServer simpleHttpServer;
 
-    public void start(int port, String contextPath) throws Exception {
+    @Inject
+    public ServerLauncher(SimpleHttpServer simpleHttpServer) {
+        this.simpleHttpServer = simpleHttpServer;
+    }
+
+    public void start(int port, String contextPath) {
         // Inicializa o servidor com o CDI gerenciando as dependências
-        simpleHttpServer.start(port, contextPath);
+        try {
+            simpleHttpServer.start(port, contextPath);
+        } catch (Exception e) {
+            logger.error("HTTP server start fail", e);
+        }
     }
 }
