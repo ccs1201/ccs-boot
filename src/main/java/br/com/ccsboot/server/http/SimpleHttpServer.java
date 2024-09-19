@@ -1,7 +1,6 @@
 package br.com.ccsboot.server.http;
 
 import br.com.ccsboot.server.handler.HandlerDispatcher;
-import br.com.ccsboot.server.handler.HandlerResolver;
 import com.sun.net.httpserver.HttpServer;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -17,10 +16,12 @@ public class SimpleHttpServer {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleHttpServer.class);
     private HttpServer server;
-    @Inject
-    private HandlerResolver resolver;
-    @Inject
     private HandlerDispatcher handlerDispatcher;
+
+    @Inject
+    public SimpleHttpServer(HandlerDispatcher handlerDispatcher) {
+        this.handlerDispatcher = handlerDispatcher;
+    }
 
     public void start(int port, String contextPath) throws IOException {
         init(port, contextPath);
@@ -33,7 +34,10 @@ public class SimpleHttpServer {
         server = HttpServer.create(new InetSocketAddress(port), 0);
 
         // Define o handler para lidar com as requisições
-        server.createContext("/", handlerDispatcher);
+        if (contextPath == null || contextPath.isBlank()) {
+            contextPath = "/";
+        }
+        server.createContext(contextPath, handlerDispatcher);
 
         // Configura o executor (um thread pool)
         server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());

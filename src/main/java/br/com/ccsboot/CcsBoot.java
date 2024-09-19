@@ -3,8 +3,11 @@ package br.com.ccsboot;
 import br.com.ccsboot.server.ServerLauncher;
 import jakarta.enterprise.inject.se.SeContainer;
 import jakarta.enterprise.inject.se.SeContainerInitializer;
+import org.slf4j.Logger;
 
 public class CcsBoot {
+
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(CcsBoot.class);
 
     public static void main(String[] args) {
 
@@ -15,7 +18,7 @@ public class CcsBoot {
             ServerLauncher serverLauncher = container.select(ServerLauncher.class).get();
             serverLauncher.start(8080, "/");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Server start fail", e);
             System.exit(999);
         }
     }

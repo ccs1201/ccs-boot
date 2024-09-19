@@ -21,8 +21,8 @@ import java.text.MessageFormat;
 public class HandlerDispatcher implements HttpHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(HandlerDispatcher.class);
-    private HandlerResolver resolver;
-    private ObjectMapper objectMapper;
+    private final HandlerResolver resolver;
+    private final ObjectMapper objectMapper;
 
     @Inject
     public HandlerDispatcher(HandlerResolver resolver, ObjectMapper objectMapper) {
@@ -66,6 +66,7 @@ public class HandlerDispatcher implements HttpHandler {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Method methodResolver(Object handlerObject, HttpExchange exchange) {
         Method[] methods = handlerObject.getClass().getMethods();
 
