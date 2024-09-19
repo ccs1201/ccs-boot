@@ -30,16 +30,12 @@ public class SimpleHttpServer {
     }
 
     private void configure(int port, String contextPath) throws IOException {
-        // Cria o servidor HTTP
-        server = HttpServer.create(new InetSocketAddress(port), 0);
-
-        // Define o handler para lidar com as requisições
         if (contextPath == null || contextPath.isBlank()) {
             contextPath = "/";
         }
-        server.createContext(contextPath, handlerDispatcher);
 
-        // Configura o executor (um thread pool)
+        server = HttpServer.create(new InetSocketAddress(port), 0);
+        server.createContext(contextPath, handlerDispatcher);
         server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
     }
 }
