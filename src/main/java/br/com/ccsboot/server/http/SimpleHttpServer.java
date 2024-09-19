@@ -24,12 +24,12 @@ public class SimpleHttpServer {
     }
 
     public void start(int port, String contextPath) throws IOException {
-        init(port, contextPath);
+        configure(port, contextPath);
         server.start();
         logger.info("Server started and listening on port: {}", server.getAddress().getPort());
     }
 
-    private void init(int port, String contextPath) throws IOException {
+    private void configure(int port, String contextPath) throws IOException {
         // Cria o servidor HTTP
         server = HttpServer.create(new InetSocketAddress(port), 0);
 
