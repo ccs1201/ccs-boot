@@ -16,7 +16,7 @@ public class SimpleHttpServer {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleHttpServer.class);
     private HttpServer server;
-    private HandlerDispatcher handlerDispatcher;
+    private final HandlerDispatcher handlerDispatcher;
 
     @Inject
     public SimpleHttpServer(HandlerDispatcher handlerDispatcher) {
