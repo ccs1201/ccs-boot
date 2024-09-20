@@ -1,8 +1,10 @@
 package br.com.ccsboot.server.handler;
 
 import br.com.ccsboot.server.http.enums.HttpStatusCode;
+import br.com.ccsboot.server.support.exceptions.RequestBodyExtractException;
 import br.com.ccsboot.server.support.exceptions.ServerException;
 import br.com.ccsboot.server.support.exceptions.UnsupportedMethodException;
+import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -12,31 +14,33 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.MessageFormat;
 
 @Singleton
 public class HandlerDispatcher implements HttpHandler {
 
-    private final Logger logger;
+    private final Logger log;
     private final HandlerResolver resolver;
     private final ObjectMapper objectMapper;
 
     @Inject
-    public HandlerDispatcher(HandlerResolver resolver, ObjectMapper objectMapper, Logger logger) {
+    public HandlerDispatcher(HandlerResolver resolver, ObjectMapper objectMapper, Logger log) {
         this.resolver = resolver;
         this.objectMapper = objectMapper;
-        this.logger = logger;
+        this.log = log;
     }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        logger.info("Requested URI: {} ", exchange.getRequestURI());
+        log.info("Requested URI: {} ", exchange.getRequestURI());
         try {
             var handlerObject = resolver.resolve(exchange.getRequestURI());
-
             var method = methodResolver(handlerObject, exchange);
-            var returned = method.invoke(handlerObject);
+            var body = extractRequestBody(exchange);
+            log.info("Request body: {} ", body);
+
+            var returned = doInvokeMethod(method, body, handlerObject);
 
             if (returned == null) {
                 exchange.sendResponseHeaders(HttpStatusCode.OK.getCode(), -1);
@@ -72,16 +76,33 @@ public class HandlerDispatcher implements HttpHandler {
         }
 
         // Caso nenhum método seja encontrado lança uma exceção
-        throw new UnsupportedMethodException(
-                MessageFormat.format("No handler found for HTTP method: {0} in path {1}",
-                        exchange.getRequestMethod(),
-                        exchange.getRequestURI().getPath()));
+        throw new UnsupportedMethodException(exchange.getRequestMethod(),exchange.getRequestURI().getPath());
+    }
+
+    private static String extractRequestBody(HttpExchange exchange) {
+        try {
+            return new String(exchange.getRequestBody().readAllBytes());
+        } catch (IOException e) {
+            throw new RequestBodyExtractException(e);
+        }
+    }
+
+    private Object doInvokeMethod(Method method, String body, Object handlerObject) throws InvocationTargetException, IllegalAccessException {
+        if (method.getParameters().length == 1) {
+            var methodInputClass = method.getParameters()[0].getType();
+            try {
+                var input = objectMapper.readValue(body, methodInputClass);
+                return method.invoke(handlerObject, input);
+            } catch (JacksonException e) {
+                throw new RequestBodyExtractException(e);
+            }
+        } else {
+            return method.invoke(handlerObject);
+        }
     }
 
     private void sendError(HttpExchange exchange, Exception exception) throws IOException {
-
-        logger.error("Handler dispatcher error ", exception);
-
+        log.error("Handler dispatcher error ", exception);
         var code = HttpStatusCode.INTERNAL_SERVER_ERROR.getCode();
 
         if (exception instanceof ServerException e) {

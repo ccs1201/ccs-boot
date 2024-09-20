@@ -4,7 +4,6 @@ import br.com.ccsboot.server.annotations.Endpoint;
 import br.com.ccsboot.server.http.enums.HttpMethod;
 import br.com.ccsboot.server.support.exceptions.UnsupportedMethodException;
 
-import java.text.MessageFormat;
 import java.util.Map;
 
 public final class EndpointMethodAnnotationMapper {
@@ -26,7 +25,7 @@ public final class EndpointMethodAnnotationMapper {
 
         Class<?> endpointAnnotation = HTTP_METHOD_MAP.get(httpMethod.toUpperCase());
         if (endpointAnnotation == null) {
-            throw new UnsupportedMethodException(MessageFormat.format("HTTP method {0} not supported: ", httpMethod));
+            throw new UnsupportedMethodException(httpMethod);
         }
 
         return endpointAnnotation;
