@@ -5,7 +5,6 @@ import com.sun.net.httpserver.HttpServer;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -14,13 +13,14 @@ import java.util.concurrent.Executors;
 @Singleton
 public class SimpleHttpServer {
 
-    private static final Logger logger = LoggerFactory.getLogger(SimpleHttpServer.class);
+    private final Logger logger;
     private HttpServer server;
     private final HandlerDispatcher handlerDispatcher;
 
     @Inject
-    public SimpleHttpServer(HandlerDispatcher handlerDispatcher) {
+    public SimpleHttpServer(HandlerDispatcher handlerDispatcher, Logger logger) {
         this.handlerDispatcher = handlerDispatcher;
+        this.logger = logger;
     }
 
     public void start(int port, String contextPath) throws IOException {

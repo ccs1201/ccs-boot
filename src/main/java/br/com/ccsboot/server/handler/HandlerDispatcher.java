@@ -9,7 +9,6 @@ import com.sun.net.httpserver.HttpHandler;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -20,14 +19,15 @@ import java.text.MessageFormat;
 @Singleton
 public class HandlerDispatcher implements HttpHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(HandlerDispatcher.class);
+    private final Logger logger;
     private final HandlerResolver resolver;
     private final ObjectMapper objectMapper;
 
     @Inject
-    public HandlerDispatcher(HandlerResolver resolver, ObjectMapper objectMapper) {
+    public HandlerDispatcher(HandlerResolver resolver, ObjectMapper objectMapper, Logger logger) {
         this.resolver = resolver;
         this.objectMapper = objectMapper;
+        this.logger = logger;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class HandlerDispatcher implements HttpHandler {
         exchange.close();
     }
 
-    private static void sendError(HttpExchange exchange, Exception exception) throws IOException {
+    private void sendError(HttpExchange exchange, Exception exception) throws IOException {
 
         logger.error("Handler dispatcher error ", exception);
 

@@ -8,7 +8,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jboss.weld.inject.WeldInstance;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.Collections;
@@ -18,11 +17,12 @@ import java.util.Map;
 @Singleton
 public class HandlerResolver {
 
-    private static final Logger logger = LoggerFactory.getLogger(HandlerResolver.class);
+    private final Logger logger;
     private final Map<String, Object> controllerMap;
 
     @Inject
-    public HandlerResolver(@Any WeldInstance<EndpointController> controllers) {
+    public HandlerResolver(@Any WeldInstance<EndpointController> controllers, Logger logger) {
+        this.logger = logger;
         // Registra controladores com base na anotação @EndpointController
         var map = new HashMap<String, Object>();
         for (EndpointController controller : controllers) {

@@ -4,10 +4,11 @@ import br.com.ccsboot.server.ServerLauncher;
 import jakarta.enterprise.inject.se.SeContainer;
 import jakarta.enterprise.inject.se.SeContainerInitializer;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CcsBoot {
 
-    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(CcsBoot.class);
+    private static final Logger logger = LoggerFactory.getLogger(CcsBoot.class);
 
     public static void main(String[] args) {
 
