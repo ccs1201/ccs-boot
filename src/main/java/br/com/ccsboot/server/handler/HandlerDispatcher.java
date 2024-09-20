@@ -50,8 +50,8 @@ public class HandlerDispatcher implements HttpHandler {
 
             var response = objectMapper.writeValueAsString(returned);
 
-            exchange.sendResponseHeaders(HttpStatusCode.OK.getCode(), response.getBytes().length);
             exchange.getResponseHeaders().add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(HttpStatusCode.OK.getCode(), response.getBytes().length);
             var os = exchange.getResponseBody();
             os.write(response.getBytes());
             exchange.close();
@@ -76,7 +76,7 @@ public class HandlerDispatcher implements HttpHandler {
         }
 
         // Caso nenhum método seja encontrado lança uma exceção
-        throw new UnsupportedMethodException(exchange.getRequestMethod(),exchange.getRequestURI().getPath());
+        throw new UnsupportedMethodException(exchange.getRequestMethod(), exchange.getRequestURI().getPath());
     }
 
     private static String extractRequestBody(HttpExchange exchange) {
