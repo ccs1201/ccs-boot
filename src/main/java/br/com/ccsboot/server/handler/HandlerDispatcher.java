@@ -96,9 +96,9 @@ public class HandlerDispatcher implements HttpHandler {
             } catch (JacksonException e) {
                 throw new RequestBodyExtractException(e);
             }
-        } else {
-            return method.invoke(handlerObject);
         }
+
+        return method.invoke(handlerObject);
     }
 
     private void sendError(HttpExchange exchange, Exception exception) throws IOException {
