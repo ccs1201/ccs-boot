@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.ccs</groupId>
+    <groupId>br.com.ccs</groupId>
     <artifactId>ccs-boot</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
@@ -57,23 +57,7 @@
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-
-        <!-- Weld Core - Core do Weld -->
-<!--        <dependency>-->
-<!--            <groupId>org.jboss.weld</groupId>-->
-<!--            <artifactId>weld-core-impl</artifactId>-->
-<!--            <version>5.1.3.Final</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash; API CDI (JSR-365) &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>jakarta.enterprise</groupId>-->
-<!--            <artifactId>jakarta.enterprise.cdi-api</artifactId>-->
-<!--            <version>4.0.1</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-
-        <!-- Opcional: JUnit para testes -->
+        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
