@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 
@@ -53,9 +52,6 @@ public class HandlerDispatcher implements HttpHandler {
             os.write(response.getBytes());
             exchange.close();
 
-
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            sendError(exchange, HttpStatusCode.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             sendError(exchange, e);
         }
@@ -65,7 +61,7 @@ public class HandlerDispatcher implements HttpHandler {
     private Method methodResolver(Object handlerObject, HttpExchange exchange) {
         Method[] methods = handlerObject.getClass().getMethods();
 
-        // Obtém a classe da anotação correspondente ao método HTTP
+        // Obtém a classe de anotação correspondente ao método HTTP
         Class<?> annotationType = EndpointMethodAnnotationMapper.resolveMethodAnotedType(exchange.getRequestMethod());
 
         for (Method method : methods) {
@@ -80,11 +76,6 @@ public class HandlerDispatcher implements HttpHandler {
                 MessageFormat.format("No handler found for HTTP method: {0} in path {1}",
                         exchange.getRequestMethod(),
                         exchange.getRequestURI().getPath()));
-    }
-
-    private static void sendError(HttpExchange exchange, HttpStatusCode statusCode) throws IOException {
-        exchange.sendResponseHeaders(statusCode.getCode(), 0);
-        exchange.close();
     }
 
     private void sendError(HttpExchange exchange, Exception exception) throws IOException {
