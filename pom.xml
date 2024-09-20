@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>br.com.ccs</groupId>
-    <artifactId>ccs-boot</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>boot</artifactId>
+    <version>0.0.2-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -83,7 +83,7 @@
                             <!-- Configuração para mesclar arquivos de manifesto -->
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>br.com.ccsboot.CcsBoot</mainClass>
+                                    <mainClass>br.com.ccs.boot.CcsBoot</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
