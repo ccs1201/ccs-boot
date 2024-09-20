@@ -36,11 +36,6 @@ public class HandlerDispatcher implements HttpHandler {
         try {
             var handlerObject = resolver.resolve(exchange.getRequestURI());
 
-            if (handlerObject == null) {
-                sendError(exchange, HttpStatusCode.NOT_FOUND);
-                return;
-            }
-
             var method = methodResolver(handlerObject, exchange);
             var returned = method.invoke(handlerObject);
 

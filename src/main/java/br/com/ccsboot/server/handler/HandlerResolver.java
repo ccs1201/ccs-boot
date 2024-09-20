@@ -42,7 +42,6 @@ public class HandlerResolver {
     }
 
     public Object resolve(URI uri) {
-
         var path = uri.getPath();
 
         if (path.endsWith("/")) {
@@ -54,6 +53,7 @@ public class HandlerResolver {
         if (controller == null) {
             throw new HandlerNotFoundException("No handler found for path: " + uri.getPath());
         }
+
         logger.info("Request resolved to {}", controller.getClass());
         return controller;
     }
