@@ -3,6 +3,7 @@ package br.com.ccsboot.server.handler;
 import br.com.ccsboot.server.http.enums.HttpStatusCode;
 import br.com.ccsboot.server.support.exceptions.ServerException;
 import br.com.ccsboot.server.support.exceptions.UnsupportedMethodException;
+import br.com.ccsboot.test.Annotation.HttpParam;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -15,6 +16,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
+import java.util.Map;
 
 @Singleton
 public class HandlerDispatcher implements HttpHandler {
