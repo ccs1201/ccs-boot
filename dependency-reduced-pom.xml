@@ -18,7 +18,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>br.com.ccsboot.CcsBoot</mainClass>
+                  <mainClass>br.com.ccs.boot.CcsBoot</mainClass>
                 </transformer>
               </transformers>
             </configuration>
