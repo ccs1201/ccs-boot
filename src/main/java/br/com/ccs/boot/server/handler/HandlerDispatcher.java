@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 @Singleton
 public class HandlerDispatcher implements HttpHandler {
@@ -63,20 +64,23 @@ public class HandlerDispatcher implements HttpHandler {
 
     @SuppressWarnings("unchecked")
     private Method methodResolver(Object handlerObject, HttpExchange exchange) {
+
         Method[] methods = handlerObject.getClass().getMethods();
 
         // Obtém a classe de anotação correspondente ao método HTTP
-        Class<?> annotationType = EndpointMethodAnnotationMapper.resolveMethodAnotedType(exchange.getRequestMethod());
+        Class<?> annotationType = EndpointMethodAnnotationMapper
+                .resolveMethodAnotedType(exchange.getRequestMethod());
 
-        for (Method method : methods) {
-            // Verifica se o método está anotado com a anotação correspondente ao método HTTP
-            if (method.isAnnotationPresent((Class<? extends Annotation>) annotationType)) {
-                return method;  // Retorna o método que corresponde ao HTTP Method
-            }
-        }
-
-        // Caso nenhum método seja encontrado lança uma exceção
-        throw new UnsupportedMethodException(exchange.getRequestMethod(), exchange.getRequestURI().getPath());
+        /*
+         Verifica se o método está anotado com a anotação correspondente ao método HTTP
+         *Retorna o método que corresponde ao HTTP Method
+        * Caso nenhum método seja encontrado lança uma exceção
+         */
+        return Arrays.stream(methods)
+                .filter(m -> m.isAnnotationPresent((Class<? extends Annotation>) annotationType))
+                .findFirst()
+                .orElseThrow(() ->
+                        new UnsupportedMethodException(exchange.getRequestMethod(), exchange.getRequestURI().getPath()));
     }
 
     private static String extractRequestBody(HttpExchange exchange) {
