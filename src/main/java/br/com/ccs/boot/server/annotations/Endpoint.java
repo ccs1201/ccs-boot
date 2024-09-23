@@ -1,6 +1,6 @@
 package br.com.ccs.boot.server.annotations;
 
-import jakarta.inject.Singleton;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * <p>Supported HTTP methods are: GET, POST, PUT, DELETE</p>
  * @since 23/09/2024
  */
-@Singleton
+@ApplicationScoped
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Endpoint {

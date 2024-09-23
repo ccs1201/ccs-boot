@@ -3,15 +3,15 @@ package br.com.ccs.boot.server.http;
 import br.com.ccs.boot.server.handler.HandlerDispatcher;
 import com.sun.net.httpserver.HttpServer;
 import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
-@Singleton
+@ApplicationScoped
 public class SimpleHttpServer {
 
     private final Logger log;
