@@ -18,7 +18,6 @@ public class ServerLauncher {
     }
 
     public void start(int port, String contextPath) {
-        // Inicializa o servidor com o CDI gerenciando as dependências
         try {
             simpleHttpServer.start(port, contextPath);
         } catch (Exception e) {

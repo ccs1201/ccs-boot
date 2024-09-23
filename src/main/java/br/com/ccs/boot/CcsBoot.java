@@ -16,7 +16,7 @@ public class CcsBoot {
         try {
             SeContainer container = SeContainerInitializer.newInstance().initialize();
             // Injeta o SimpleHttpServer via CDI
-            ServerLauncher serverLauncher = container.select(ServerLauncher.class).get();
+            var serverLauncher = container.select(ServerLauncher.class).get();
             serverLauncher.start(8080, "/");
         } catch (Exception e) {
             logger.error("Server start fail", e);
