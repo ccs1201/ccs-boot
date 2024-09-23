@@ -17,12 +17,12 @@ import java.util.Map;
 @Singleton
 public class HandlerResolver {
 
-    private final Logger logger;
+    private final Logger log;
     private final Map<String, Object> controllerMap;
 
     @Inject
-    public HandlerResolver(@Any WeldInstance<EndpointController> controllers, Logger logger) {
-        this.logger = logger;
+    public HandlerResolver(@Any WeldInstance<EndpointController> controllers, Logger log) {
+        this.log = log;
         // Registra controladores com base na anotação @EndpointController
         var map = new HashMap<String, Object>();
         for (EndpointController controller : controllers) {
@@ -34,11 +34,11 @@ public class HandlerResolver {
                 }
                 map.put(path, controller);
             } else {
-                logger.warn("Controller {} is not annotated with @Endpoint", clazz.getName());
+                log.warn("Controller {} is not annotated with @Endpoint", clazz.getName());
             }
         }
         controllerMap = Collections.unmodifiableMap(map);
-        logger.info("HandlerResolver initialized with {} controllers.", controllerMap.size());
+        log.info("HandlerResolver initialized with {} controllers.", controllerMap.size());
     }
 
     public Object resolve(URI uri) {
@@ -54,7 +54,7 @@ public class HandlerResolver {
             throw new HandlerNotFoundException("No handler found for path: " + uri.getPath());
         }
 
-        logger.info("Request resolved to {}", controller.getClass());
+        log.info("Request resolved to {}", controller.getClass());
         return controller;
     }
 }
