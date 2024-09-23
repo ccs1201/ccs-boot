@@ -13,20 +13,20 @@ import java.util.concurrent.Executors;
 @Singleton
 public class SimpleHttpServer {
 
-    private final Logger logger;
+    private final Logger log;
     private HttpServer server;
     private final HandlerDispatcher handlerDispatcher;
 
     @Inject
-    public SimpleHttpServer(HandlerDispatcher handlerDispatcher, Logger logger) {
+    public SimpleHttpServer(HandlerDispatcher handlerDispatcher, Logger log) {
         this.handlerDispatcher = handlerDispatcher;
-        this.logger = logger;
+        this.log = log;
     }
 
     public void start(int port, String contextPath) throws IOException {
         configure(port, contextPath);
         server.start();
-        logger.info("Server started and listening on port: {}", server.getAddress().getPort());
+        log.info("Server started and listening on port: {}", server.getAddress().getPort());
     }
 
     private void configure(int port, String contextPath) throws IOException {

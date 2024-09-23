@@ -1,5 +1,6 @@
 package br.com.ccs.boot.server.handler;
 
+import br.com.ccs.boot.server.annotations.HttpResponseCode;
 import br.com.ccs.boot.server.http.enums.HttpStatusCode;
 import br.com.ccs.boot.server.support.exceptions.RequestBodyExtractException;
 import br.com.ccs.boot.server.support.exceptions.ServerException;
@@ -42,24 +43,21 @@ public class HandlerDispatcher implements HttpHandler {
             log.info("Request body: {} ", body);
 
             var returned = doInvokeMethod(method, body, handlerObject);
-
-            if (returned == null) {
-                exchange.sendResponseHeaders(HttpStatusCode.OK.getCode(), -1);
-                exchange.close();
-                return;
-            }
-
-            var response = objectMapper.writeValueAsString(returned);
-
-            exchange.getResponseHeaders().add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(HttpStatusCode.OK.getCode(), response.getBytes().length);
-            var os = exchange.getResponseBody();
-            os.write(response.getBytes());
-            exchange.close();
+            var responseCode = getHttpResponseCode(method);
+            sendResponse(exchange, responseCode, returned);
 
         } catch (Exception e) {
             sendError(exchange, e);
         }
+    }
+
+    private static int getHttpResponseCode(Method method) {
+
+        if (!method.isAnnotationPresent(HttpResponseCode.class)) {
+            return HttpStatusCode.OK.getCode();
+        }
+
+        return method.getAnnotation(HttpResponseCode.class).value().getCode();
     }
 
     @SuppressWarnings("unchecked")
@@ -72,9 +70,9 @@ public class HandlerDispatcher implements HttpHandler {
                 .resolveMethodAnotedType(exchange.getRequestMethod());
 
         /*
-         Verifica se o método está anotado com a anotação correspondente ao método HTTP
-         *Retorna o método que corresponde ao HTTP Method
-        * Caso nenhum método seja encontrado lança uma exceção
+            Verifica se o método está anotado com a anotação correspondente ao método HTTP
+            Retorna o método que corresponde ao HTTP Method
+            Caso nenhum método seja encontrado lança uma exceção
          */
         return Arrays.stream(methods)
                 .filter(m -> m.isAnnotationPresent((Class<? extends Annotation>) annotationType))
@@ -119,4 +117,27 @@ public class HandlerDispatcher implements HttpHandler {
         exchange.close();
     }
 
+    private void sendResponse(HttpExchange exchange, int responseCode, Object returned) throws IOException {
+
+        if (returned == null) {
+            sendResponseNoBody(exchange, responseCode);
+            return;
+        }
+
+        var response = objectMapper.writeValueAsString(returned);
+        sendResponseWithBody(exchange, responseCode, response);
+    }
+
+    private static void sendResponseWithBody(HttpExchange exchange, int responseCode, String response) throws IOException {
+        exchange.getResponseHeaders().add("Content-Type", "application/json");
+        exchange.sendResponseHeaders(responseCode, response.getBytes().length);
+        var os = exchange.getResponseBody();
+        os.write(response.getBytes());
+        exchange.close();
+    }
+
+    private static void sendResponseNoBody(HttpExchange exchange, int responseCode) throws IOException {
+        exchange.sendResponseHeaders(responseCode, -1);
+        exchange.close();
+    }
 }
