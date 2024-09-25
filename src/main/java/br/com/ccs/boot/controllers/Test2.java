@@ -5,7 +5,7 @@ import br.com.ccs.boot.controllers.models.input.InputTest;
 import br.com.ccs.boot.controllers.models.output.ResponseTest2;
 import br.com.ccs.boot.server.EndpointController;
 import br.com.ccs.boot.server.annotations.Endpoint;
-import br.com.ccs.boot.server.annotations.HttpResponseCode;
+import br.com.ccs.boot.server.annotations.EndpointResponseCode;
 import br.com.ccs.boot.server.http.enums.HttpMethod;
 import br.com.ccs.boot.server.http.enums.HttpStatusCode;
 import jakarta.inject.Inject;
@@ -24,7 +24,7 @@ public class Test2 implements EndpointController {
     }
 
     @Endpoint.POST
-    @HttpResponseCode(HttpStatusCode.CREATED)
+    @EndpointResponseCode(HttpStatusCode.CREATED)
     public ResponseTest2 test(InputTest request) {
         System.out.println("teste controller 2");
         log.info("Request: {}", request);

@@ -28,7 +28,7 @@ Este projeto implementa um servidor HTTP simples com suporte a injeção de depe
 - **HandlerDispatcher** que orquestra o processo de roteamento, chamando o método correto do controlador com base na URI e no método HTTP.
 - **Respostas em JSON**, onde o body da response é convertido para JSON caso o método do controlador retorne um objeto.
 - **Conversão de bodies de Request**: Implementada a conversão de JSON para objetos do tipo esperado nos parâmetros dos métodos dos controladores.
-- **Suporte a status codes**: Implementada anotação `@HttpResponseCode` para permitir o retorno de status HTTP juntamente com a resposta.
+- **Suporte a status codes**: Implementada anotação `@EndpointResponseCode` para permitir o retorno de status HTTP juntamente com a resposta.
 - **Fixado o header `Content-Type`** para `apliccation/json` nas respostas.
 
 ## Próximos Passos
@@ -87,7 +87,7 @@ This project implements a simple HTTP server with support for dependency injecti
 - **HandlerDispatcher** that orchestrates the routing process, calling the correct controller method based on the URI and HTTP method.
 - **JSON Responses**, where the response body is converted to JSON if the controller method returns an object.
 - **Request body conversion**: JSON conversion to the expected object type for controller method parameters has been implemented.
-- **Support for status codes**: The `@HttpResponseCode` annotation has been implemented to allow the return of HTTP status codes along with the response.
+- **Support for status codes**: The `@EndpointResponseCode` annotation has been implemented to allow the return of HTTP status codes along with the response.
 - **Fixed `Content-Type` header** to `application/json` in responses.
 
 ## Next Steps

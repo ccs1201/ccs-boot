@@ -2,7 +2,7 @@ package br.com.ccs.boot.controllers;
 
 import br.com.ccs.boot.server.EndpointController;
 import br.com.ccs.boot.server.annotations.Endpoint;
-import br.com.ccs.boot.server.annotations.HttpResponseCode;
+import br.com.ccs.boot.server.annotations.EndpointResponseCode;
 import br.com.ccs.boot.server.http.enums.HttpStatusCode;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -23,19 +23,19 @@ public class Test123 implements EndpointController {
     }
 
     @Endpoint.POST
-    @HttpResponseCode(HttpStatusCode.CREATED)
+    @EndpointResponseCode(HttpStatusCode.CREATED)
     public String test2() {
         return "Teste POST";
     }
 
     @Endpoint.PUT
-    @HttpResponseCode(HttpStatusCode.ACCEPTED)
+    @EndpointResponseCode(HttpStatusCode.ACCEPTED)
     public String test3() {
         return "Teste PUT";
     }
 
     @Endpoint.DELETE
-    @HttpResponseCode(HttpStatusCode.NO_CONTENT)
+    @EndpointResponseCode(HttpStatusCode.NO_CONTENT)
     public void test4() {
         log.info("Teste DELETE");
     }

@@ -1,6 +1,6 @@
 package br.com.ccs.boot.server.handler;
 
-import br.com.ccs.boot.server.annotations.HttpResponseCode;
+import br.com.ccs.boot.server.annotations.EndpointResponseCode;
 import br.com.ccs.boot.server.http.enums.HttpStatusCode;
 import br.com.ccs.boot.server.support.exceptions.RequestBodyExtractException;
 import br.com.ccs.boot.server.support.exceptions.ServerException;
@@ -53,11 +53,11 @@ public class HandlerDispatcher implements HttpHandler {
 
     private static int getHttpResponseCode(Method method) {
 
-        if (!method.isAnnotationPresent(HttpResponseCode.class)) {
+        if (!method.isAnnotationPresent(EndpointResponseCode.class)) {
             return HttpStatusCode.OK.getCode();
         }
 
-        return method.getAnnotation(HttpResponseCode.class).value().getCode();
+        return method.getAnnotation(EndpointResponseCode.class).value().getCode();
     }
 
     @SuppressWarnings("unchecked")
@@ -124,7 +124,6 @@ public class HandlerDispatcher implements HttpHandler {
     }
 
     private void sendResponse(HttpExchange exchange, int responseCode, Object returned) throws IOException {
-
         if (returned == null) {
             sendResponseNoBody(exchange, responseCode);
             return;

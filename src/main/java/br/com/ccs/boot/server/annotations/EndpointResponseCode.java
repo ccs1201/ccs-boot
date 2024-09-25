@@ -15,6 +15,6 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface HttpResponseCode {
+public @interface EndpointResponseCode {
     HttpStatusCode value() default HttpStatusCode.OK;
 }
