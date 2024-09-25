@@ -3,7 +3,6 @@ package br.com.ccs.boot.controllers;
 
 import br.com.ccs.boot.controllers.models.input.InputTest;
 import br.com.ccs.boot.controllers.models.output.ResponseTest2;
-import br.com.ccs.boot.server.EndpointController;
 import br.com.ccs.boot.server.annotations.Endpoint;
 import br.com.ccs.boot.server.annotations.EndpointResponseCode;
 import br.com.ccs.boot.server.http.enums.HttpMethod;
@@ -14,7 +13,7 @@ import org.slf4j.Logger;
 import java.time.OffsetDateTime;
 
 @Endpoint("test/2")
-public class Test2 implements EndpointController {
+public class Test2 {
 
     private final Logger log;
 

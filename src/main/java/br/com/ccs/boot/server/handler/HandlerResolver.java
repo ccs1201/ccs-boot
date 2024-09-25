@@ -1,12 +1,11 @@
 package br.com.ccs.boot.server.handler;
 
-import br.com.ccs.boot.server.EndpointController;
 import br.com.ccs.boot.server.annotations.Endpoint;
 import br.com.ccs.boot.server.support.exceptions.HandlerNotFoundException;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
-import org.jboss.weld.inject.WeldInstance;
 import org.slf4j.Logger;
 
 import java.net.URI;
@@ -21,20 +20,22 @@ public class HandlerResolver {
     private final Map<String, Object> controllerMap;
 
     @Inject
-    public HandlerResolver(@Any WeldInstance<EndpointController> controllers, Logger log) {
+    public HandlerResolver(Logger log, BeanManager beanManager) {
         this.log = log;
+        log.info("Initializing HandlerResolver...");
+
+        var beans = beanManager.getBeans(Object.class);
+
         // Registra controladores com base na anotação @EndpointController
         var map = new HashMap<String, Object>();
-        for (EndpointController controller : controllers) {
-            Class<?> clazz = controller.getClass();
+        for (Bean<?> bean : beans) {
+            Class<?> clazz = bean.getBeanClass();
             if (clazz.isAnnotationPresent(Endpoint.class)) {
                 String path = clazz.getAnnotation(Endpoint.class).value();
                 if (!path.startsWith("/")) {
                     path = "/".concat(path);
                 }
-                map.put(path, controller);
-            } else {
-                log.warn("Controller {} is not annotated with @Endpoint", clazz.getName());
+                map.put(path, beanManager.getReference(bean, clazz, beanManager.createCreationalContext(bean)));
             }
         }
         controllerMap = Collections.unmodifiableMap(map);

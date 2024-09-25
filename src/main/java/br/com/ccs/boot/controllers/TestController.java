@@ -1,6 +1,5 @@
 package br.com.ccs.boot.controllers;
 
-import br.com.ccs.boot.server.EndpointController;
 import br.com.ccs.boot.server.annotations.Endpoint;
 import br.com.ccs.boot.server.annotations.EndpointResponseCode;
 import br.com.ccs.boot.server.http.enums.HttpStatusCode;
@@ -8,7 +7,7 @@ import br.com.ccs.boot.services.TesteService;
 import jakarta.inject.Inject;
 
 @Endpoint("test")
-public class TestController implements EndpointController {
+public class TestController {
 
     private final TesteService testeService;
 

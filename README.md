@@ -37,7 +37,7 @@ Este projeto implementa um servidor HTTP simples com suporte a injeção de depe
 - **Testes de concorrência**: Validar o comportamento do servidor em cenários de múltiplas requisições simultâneas.
 
 ## Melhorias Futuras
-- **Eliminar a necessidade de `EndpointController`**: Procurar uma forma de utilizar o Weld para fornecer os controladores anotados diretamente, sem a necessidade de implementar a interface `EndpointController`.
+- **Eliminar a necessidade de `EndpointController`**: ~~Procurar uma forma de utilizar o Weld para fornecer os controladores anotados diretamente, sem a necessidade de implementar a interface `EndpointController`.~~
 - **Cache de métodos**: Implementar um cache para armazenar os métodos dos controladores, eliminando a necessidade de fazer uma busca com reflection a cada requisição.
 - **Ajustar o content-type**: ~~Melhorar o ajuste do header `Content-Type` nas respostas.~~
 
@@ -96,7 +96,7 @@ This project implements a simple HTTP server with support for dependency injecti
 - **Concurrency tests**: Validate the server's behavior under scenarios with multiple simultaneous requests.
 
 ## Future Improvements
-- **Eliminate the need for `EndpointController`**: Find a way to use Weld to directly provide annotated controllers without requiring the implementation of the `EndpointController` interface.
+- **Eliminate the need for `EndpointController`**: ~~Find a way to use Weld to directly provide annotated controllers without requiring the implementation of the `EndpointController` interface.~~
 - **Method caching**: Implement a cache to store controller methods, eliminating the need to perform a reflection lookup on every request.
 - **Adjust content-type**: ~~Improve the handling of the `Content-Type` header in responses.~~
 

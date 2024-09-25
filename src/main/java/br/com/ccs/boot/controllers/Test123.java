@@ -1,6 +1,5 @@
 package br.com.ccs.boot.controllers;
 
-import br.com.ccs.boot.server.EndpointController;
 import br.com.ccs.boot.server.annotations.Endpoint;
 import br.com.ccs.boot.server.annotations.EndpointResponseCode;
 import br.com.ccs.boot.server.http.enums.HttpStatusCode;
@@ -8,7 +7,7 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 
 @Endpoint("test/1/2/3")
-public class Test123 implements EndpointController {
+public class Test123 {
 
     private final Logger log;
 
