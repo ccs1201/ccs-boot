@@ -111,6 +111,12 @@ public class HandlerDispatcher implements HttpHandler {
             code = e.getStatusCode().getCode();
         }
 
+        exchange.getResponseHeaders().add("Content-Type", "text/plain");
+
+        while (exception.getCause() != null) {
+            exception = (Exception) exception.getCause();
+        }
+
         exchange.sendResponseHeaders(code, exception.getMessage().getBytes().length);
         var os = exchange.getResponseBody();
         os.write(exception.getMessage().getBytes());
