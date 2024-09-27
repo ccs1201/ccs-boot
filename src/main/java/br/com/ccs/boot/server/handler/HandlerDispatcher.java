@@ -2,6 +2,7 @@ package br.com.ccs.boot.server.handler;
 
 import br.com.ccs.boot.server.annotations.EndpointResponseCode;
 import br.com.ccs.boot.server.http.enums.HttpStatusCode;
+import br.com.ccs.boot.server.support.exceptions.HandlerException;
 import br.com.ccs.boot.server.support.exceptions.RequestBodyExtractException;
 import br.com.ccs.boot.server.support.exceptions.ServerException;
 import br.com.ccs.boot.server.support.exceptions.UnsupportedMethodException;
@@ -34,7 +35,7 @@ public class HandlerDispatcher implements HttpHandler {
     }
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
+    public void handle(HttpExchange exchange) {
         log.info("Requested URI: {} ", exchange.getRequestURI());
         try {
             var handlerObject = resolver.resolve(exchange.getRequestURI());
@@ -103,24 +104,36 @@ public class HandlerDispatcher implements HttpHandler {
         return method.invoke(handlerObject);
     }
 
-    private void sendError(HttpExchange exchange, Exception exception) throws IOException {
+    private void sendError(HttpExchange exchange, Exception exception) {
         log.error("Handler dispatcher error ", exception);
-        var code = HttpStatusCode.INTERNAL_SERVER_ERROR.getCode();
-
-        if (exception instanceof ServerException e) {
-            code = e.getStatusCode().getCode();
-        }
-
         exchange.getResponseHeaders().add("Content-Type", "text/plain");
 
-        while (exception.getCause() != null) {
-            exception = (Exception) exception.getCause();
+        ServerException serverException = findServerException(exception);
+        int code = HttpStatusCode.INTERNAL_SERVER_ERROR.getCode();
+        byte[] msg = "Internal Server Error".getBytes();
+
+        if (serverException != null) {
+            code = serverException.getStatusCode().getCode();
+            msg = serverException.getMessage().getBytes();
         }
 
-        exchange.sendResponseHeaders(code, exception.getMessage().getBytes().length);
-        var os = exchange.getResponseBody();
-        os.write(exception.getMessage().getBytes());
-        exchange.close();
+        try (exchange) {
+            exchange.sendResponseHeaders(code, msg.length);
+            exchange.getResponseBody().write(msg);
+        } catch (IOException e) {
+            throw new HandlerException("Error sending error response", HttpStatusCode.INTERNAL_SERVER_ERROR, e);
+        }
+    }
+
+    private ServerException findServerException(Exception exception) {
+        var cause = exception;
+        while (cause != null) {
+            if (cause instanceof ServerException e) {
+                return e;
+            }
+            cause = (Exception) cause.getCause();
+        }
+        return null;
     }
 
     private void sendResponse(HttpExchange exchange, int responseCode, Object returned) throws IOException {
