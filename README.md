@@ -30,6 +30,7 @@ Este projeto implementa um servidor HTTP simples com suporte a injeção de depe
 - **Conversão de bodies de Request**: Implementada a conversão de JSON para objetos do tipo esperado nos parâmetros dos métodos dos controladores.
 - **Suporte a status codes**: Implementada anotação `@EndpointResponseCode` para permitir o retorno de status HTTP juntamente com a resposta.
 - **Fixado o header `Content-Type`** para `apliccation/json` nas respostas.
+- **CcsBootCustomException** paa caso queira lançar exceções customizadas com um HTTP status especifico.
 
 ## Próximos Passos
 - **Conversão de bodies de Request**: ~~Implementar a conversão de JSON para objetos do tipo esperado nos parâmetros dos métodos dos controladores.~~
@@ -89,6 +90,7 @@ This project implements a simple HTTP server with support for dependency injecti
 - **Request body conversion**: JSON conversion to the expected object type for controller method parameters has been implemented.
 - **Support for status codes**: The `@EndpointResponseCode` annotation has been implemented to allow the return of HTTP status codes along with the response.
 - **Fixed `Content-Type` header** to `application/json` in responses.
+- - **CcsBootCustomException** to throw exceptions with a custom  HTTP status.
 
 ## Next Steps
 - **Request body conversion**: ~~Implement JSON conversion to the expected object type for controller method parameters.~~
