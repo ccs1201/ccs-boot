@@ -1,6 +1,7 @@
 package br.com.ccs.boot.server.handler;
 
 import br.com.ccs.boot.server.annotations.EndpointResponseCode;
+import br.com.ccs.boot.server.handler.wrapper.HandlerWrapper;
 import br.com.ccs.boot.server.http.enums.HttpMethod;
 import br.com.ccs.boot.server.http.enums.HttpStatusCode;
 import br.com.ccs.boot.server.support.exceptions.HandlerException;

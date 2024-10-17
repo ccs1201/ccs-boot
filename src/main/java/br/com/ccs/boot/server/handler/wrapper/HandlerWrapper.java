@@ -1,4 +1,4 @@
-package br.com.ccs.boot.server.handler;
+package br.com.ccs.boot.server.handler.wrapper;
 
 import br.com.ccs.boot.server.annotations.Endpoint;
 import br.com.ccs.boot.server.http.enums.HttpMethod;
