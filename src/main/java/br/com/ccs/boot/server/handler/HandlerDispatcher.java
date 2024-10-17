@@ -1,6 +1,7 @@
 package br.com.ccs.boot.server.handler;
 
 import br.com.ccs.boot.server.annotations.EndpointResponseCode;
+import br.com.ccs.boot.server.http.enums.HttpMethod;
 import br.com.ccs.boot.server.http.enums.HttpStatusCode;
 import br.com.ccs.boot.server.support.exceptions.HandlerException;
 import br.com.ccs.boot.server.support.exceptions.RequestBodyExtractException;
@@ -15,10 +16,8 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 @ApplicationScoped
 public class HandlerDispatcher implements HttpHandler {
@@ -38,12 +37,12 @@ public class HandlerDispatcher implements HttpHandler {
     public void handle(HttpExchange exchange) {
         log.info("Requested URI: {} ", exchange.getRequestURI());
         try {
-            var handlerObject = resolver.resolve(exchange.getRequestURI());
-            var method = methodResolver(handlerObject, exchange);
+            var handlerWrapper = resolver.resolve(exchange.getRequestURI());
+            var method = methodResolver(handlerWrapper, exchange);
             var body = extractRequestBody(exchange);
             log.info("Request body: {} ", body);
 
-            var returned = doInvokeMethod(method, body, handlerObject);
+            var returned = doInvokeMethod(method, body, handlerWrapper.getHandler());
             var responseCode = getHttpResponseCode(method);
             sendResponse(exchange, responseCode, returned);
 
@@ -61,25 +60,17 @@ public class HandlerDispatcher implements HttpHandler {
         return method.getAnnotation(EndpointResponseCode.class).value().getCode();
     }
 
-    @SuppressWarnings("unchecked")
-    private Method methodResolver(Object handlerObject, HttpExchange exchange) {
+    private Method methodResolver(HandlerWrapper handlerWrapper, HttpExchange exchange) {
 
-        Method[] methods = handlerObject.getClass().getMethods();
+//        Method[] methods = handlerWrapper.getClass().getMethods();
 
         // Obtém a classe de anotação correspondente ao método HTTP
-        Class<?> annotationType = EndpointMethodAnnotationMapper
-                .resolveMethodAnotedType(exchange.getRequestMethod());
+//        Class<?> annotationType = EndpointMethodAnnotationMapper
+//                .resolveMethodAnotedType(exchange.getRequestMethod());
 
-        /*
-            Verifica se o método está anotado com a anotação correspondente ao método HTTP
-            Retorna o método que corresponde ao HTTP Method
-            Caso nenhum método seja encontrado lança uma exceção
-         */
-        return Arrays.stream(methods)
-                .filter(m -> m.isAnnotationPresent((Class<? extends Annotation>) annotationType))
-                .findFirst()
-                .orElseThrow(() ->
-                        new UnsupportedMethodException(exchange.getRequestMethod(), exchange.getRequestURI().getPath()));
+        return handlerWrapper.getHttpMethodHandler(HttpMethod.valueOf(exchange.getRequestMethod()))
+                .orElseThrow(() -> new UnsupportedMethodException(exchange.getRequestMethod()));
+
     }
 
     private static String extractRequestBody(HttpExchange exchange) {
@@ -90,18 +81,18 @@ public class HandlerDispatcher implements HttpHandler {
         }
     }
 
-    private Object doInvokeMethod(Method method, String body, Object handlerObject) throws InvocationTargetException, IllegalAccessException {
+    private Object doInvokeMethod(Method method, String body, Object handler) throws InvocationTargetException, IllegalAccessException {
         if (method.getParameters().length == 1) {
             var methodInputClass = method.getParameters()[0].getType();
             try {
                 var input = objectMapper.readValue(body, methodInputClass);
-                return method.invoke(handlerObject, input);
+                return method.invoke(handler, input);
             } catch (JacksonException e) {
                 throw new RequestBodyExtractException(e);
             }
         }
 
-        return method.invoke(handlerObject);
+        return method.invoke(handler);
     }
 
     private void sendError(HttpExchange exchange, Exception exception) {

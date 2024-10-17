@@ -17,7 +17,7 @@ import java.util.Map;
 public class HandlerResolver {
 
     private final Logger log;
-    private final Map<String, Object> controllerMap;
+    private final Map<String, HandlerWrapper> controllerMap;
 
     @Inject
     public HandlerResolver(Logger log, BeanManager beanManager) {
@@ -27,7 +27,7 @@ public class HandlerResolver {
         var beans = beanManager.getBeans(Object.class);
 
         // Registra controladores com base na anotação @EndpointController
-        var map = new HashMap<String, Object>();
+        var map = new HashMap<String, HandlerWrapper>();
         for (Bean<?> bean : beans) {
             Class<?> clazz = bean.getBeanClass();
             if (clazz.isAnnotationPresent(Endpoint.class)) {
@@ -35,14 +35,14 @@ public class HandlerResolver {
                 if (!path.startsWith("/")) {
                     path = "/".concat(path);
                 }
-                map.put(path, beanManager.getReference(bean, clazz, beanManager.createCreationalContext(bean)));
+                map.put(path, HandlerWrapper.of(beanManager.getReference(bean, clazz, beanManager.createCreationalContext(bean))));
             }
         }
         controllerMap = Collections.unmodifiableMap(map);
         log.info("HandlerResolver initialized with {} controllers.", controllerMap.size());
     }
 
-    public Object resolve(URI uri) {
+    public HandlerWrapper resolve(URI uri) {
         var path = uri.getPath();
 
         if (path.endsWith("/")) {

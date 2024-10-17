@@ -17,25 +17,25 @@ public class Test123 {
     }
 
     @Endpoint.GET
-    public String test() {
+    public String testGet() {
         return "Teste GET";
     }
 
     @Endpoint.POST
     @EndpointResponseCode(HttpStatusCode.CREATED)
-    public String test2() {
+    public String testPost() {
         return "Teste POST";
     }
 
     @Endpoint.PUT
     @EndpointResponseCode(HttpStatusCode.ACCEPTED)
-    public String test3() {
+    public String testPut() {
         return "Teste PUT";
     }
 
     @Endpoint.DELETE
     @EndpointResponseCode(HttpStatusCode.NO_CONTENT)
-    public void test4() {
+    public void testDelete() {
         log.info("Teste DELETE");
     }
 
