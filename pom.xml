@@ -6,6 +6,27 @@
     <groupId>br.com.ccs</groupId>
     <artifactId>boot</artifactId>
     <version>0.0.2-SNAPSHOT</version>
+    <packaging>jar</packaging> <!-- Definindo como JAR -->
+
+    <name>ccs-boot</name>
+    <description>Custom boot framework for microservices</description>
+    <url>https://github.com/ccs1201/ccs-boot</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>csouza</id>
+            <name>Cleber Souza</name>
+            <url>https://github.com/ccs1201</url>
+        </developer>
+    </developers>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -71,24 +92,25 @@
             <!-- Plugin para criar o fat jar -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.3</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Configuração para mesclar arquivos de manifesto -->
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>br.com.ccs.boot.CcsBoot</mainClass>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source> <!-- Certifique-se que a versão do Java é compatível -->
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>

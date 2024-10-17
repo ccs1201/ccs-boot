@@ -1,4 +1,4 @@
-package br.com.ccs.boot.server.annotations;
+package br.com.ccs.boot.annotations;
 
 import jakarta.enterprise.context.ApplicationScoped;
 

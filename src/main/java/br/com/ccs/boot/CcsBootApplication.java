@@ -6,15 +6,17 @@ import jakarta.enterprise.inject.se.SeContainerInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CcsBoot {
+public class CcsBootApplication {
 
-    private static final Logger logger = LoggerFactory.getLogger(CcsBoot.class);
+    private static final Logger logger = LoggerFactory.getLogger(CcsBootApplication.class);
 
-    public static void main(String[] args) {
+    public static void run(Class<?> mainClass, String[] args) {
 
         try {
             // Inicializa o container CDI
-            SeContainer container = SeContainerInitializer.newInstance().initialize();
+            var initializer = SeContainerInitializer.newInstance();
+            initializer.addPackages(true, mainClass);
+            var container = initializer.initialize();
             // Injeta o SimpleHttpServer via CDI
             var serverLauncher = container.select(ServerLauncher.class).get();
             serverLauncher.start(8080, "/");
