@@ -1,6 +1,6 @@
 package br.com.ccs.boot.server.handler.wrapper;
 
-import br.com.ccs.boot.server.annotations.Endpoint;
+import br.com.ccs.boot.annotations.Endpoint;
 import br.com.ccs.boot.server.http.enums.HttpMethod;
 
 import java.lang.reflect.Method;

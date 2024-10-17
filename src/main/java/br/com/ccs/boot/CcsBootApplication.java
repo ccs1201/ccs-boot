@@ -6,11 +6,11 @@ import jakarta.enterprise.inject.se.SeContainerInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CcsBoot {
+public class CcsBootApplication {
 
-    private static final Logger logger = LoggerFactory.getLogger(CcsBoot.class);
+    private static final Logger logger = LoggerFactory.getLogger(CcsBootApplication.class);
 
-    public static void main(String[] args) {
+    public static void run(String[] args) {
 
         try {
             // Inicializa o container CDI

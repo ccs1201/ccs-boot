@@ -1,8 +1,8 @@
 package br.com.ccs.boot.server.handler;
 
-import br.com.ccs.boot.server.annotations.Endpoint;
+import br.com.ccs.boot.annotations.Endpoint;
 import br.com.ccs.boot.server.handler.wrapper.HandlerWrapper;
-import br.com.ccs.boot.server.support.exceptions.HandlerNotFoundException;
+import br.com.ccs.boot.support.exceptions.HandlerNotFoundException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;

@@ -1,4 +1,4 @@
-package br.com.ccs.boot.server.support.log;
+package br.com.ccs.boot.support.log;
 
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.enterprise.inject.Produces;
