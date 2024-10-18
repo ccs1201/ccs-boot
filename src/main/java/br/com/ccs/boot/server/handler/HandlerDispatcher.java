@@ -62,12 +62,6 @@ public class HandlerDispatcher implements HttpHandler {
 
     private Method methodResolver(HandlerWrapper handlerWrapper, HttpExchange exchange) {
 
-//        Method[] methods = handlerWrapper.getClass().getMethods();
-
-        // Obtém a classe de anotação correspondente ao método HTTP
-//        Class<?> annotationType = EndpointMethodAnnotationMapper
-//                .resolveMethodAnotedType(exchange.getRequestMethod());
-
         return handlerWrapper.getHttpMethodHandler(HttpMethod.valueOf(exchange.getRequestMethod()))
                 .orElseThrow(() -> new UnsupportedMethodException(exchange.getRequestMethod()));
 
