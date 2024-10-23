@@ -18,7 +18,7 @@ import java.util.Map;
 public class HandlerResolver {
 
     private final Logger log;
-    private final Map<String, HandlerWrapper> controllerMap;
+    private final Map<String, HandlerWrapper> handlerMap;
 
     @Inject
     public HandlerResolver(Logger log, BeanManager beanManager) {
@@ -36,11 +36,11 @@ public class HandlerResolver {
                 if (!path.startsWith("/")) {
                     path = "/".concat(path);
                 }
-                map.put(path, HandlerWrapper.of(beanManager.getReference(bean, clazz, beanManager.createCreationalContext(bean))));
+                map.put(path, HandlerWrapper.of(clazz, beanManager.getReference(bean, clazz, beanManager.createCreationalContext(bean))));
             }
         }
-        controllerMap = Collections.unmodifiableMap(map);
-        log.info("HandlerResolver initialized with {} controllers.", controllerMap.size());
+        handlerMap = Collections.unmodifiableMap(map);
+        log.info("HandlerResolver initialized with {} controllers.", handlerMap.size());
     }
 
     public HandlerWrapper resolve(URI uri) {
@@ -50,14 +50,14 @@ public class HandlerResolver {
             path = path.substring(0, path.length() - 1);
         }
 
-        var controller = controllerMap.get(path);
+        var handlerWrapper = handlerMap.get(path);
 
-        if (controller == null) {
+        if (handlerWrapper == null) {
             throw new HandlerNotFoundException("No handler found for path: " + uri.getPath());
         }
 
-        log.info("Request resolved to {}", controller.getClass());
-        return controller;
+        log.info("Request resolved to {}", handlerWrapper.getHandlerClass());
+        return handlerWrapper;
     }
 }
 

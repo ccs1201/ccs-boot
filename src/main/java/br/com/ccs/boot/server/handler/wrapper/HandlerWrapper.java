@@ -8,10 +8,12 @@ import java.util.*;
 
 public class HandlerWrapper {
 
+    private final Class<?> handlerClass;
     private final Object handler;
     private final Map<HttpMethod, Method> methodMap;
 
-    private HandlerWrapper(Object handler) {
+    private HandlerWrapper(Class<?> clazz, Object handler) {
+        this.handlerClass = clazz;
         this.handler = handler;
         this.methodMap = this.creatMethodMap();
     }
@@ -47,11 +49,15 @@ public class HandlerWrapper {
         return handler;
     }
 
+    public Class<?> getHandlerClass() {
+        return handlerClass;
+    }
+
     public Optional<Method> getHttpMethodHandler(HttpMethod httpMethod) {
         return Optional.ofNullable(methodMap.get(httpMethod));
     }
 
-    public static HandlerWrapper of(Object handler) {
-        return new HandlerWrapper(handler);
+    public static HandlerWrapper of(Class<?> clazz, Object handler) {
+        return new HandlerWrapper(clazz, handler);
     }
 }

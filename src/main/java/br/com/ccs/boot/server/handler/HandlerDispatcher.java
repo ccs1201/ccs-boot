@@ -63,9 +63,12 @@ public class HandlerDispatcher implements HttpHandler {
 
     private Method methodResolver(HandlerWrapper handlerWrapper, HttpExchange exchange) {
 
-        return handlerWrapper.getHttpMethodHandler(HttpMethod.valueOf(exchange.getRequestMethod()))
-                .orElseThrow(() -> new UnsupportedMethodException(exchange.getRequestMethod()));
-
+        try {
+            return handlerWrapper.getHttpMethodHandler(HttpMethod.valueOf(exchange.getRequestMethod()))
+                    .orElseThrow(() -> new UnsupportedMethodException(exchange.getRequestMethod(), exchange.getRequestURI()));
+        } catch (IllegalArgumentException e) {
+            throw new UnsupportedMethodException(exchange.getRequestMethod());
+        }
     }
 
     private static String extractRequestBody(HttpExchange exchange) {
