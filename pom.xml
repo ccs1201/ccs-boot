@@ -6,7 +6,7 @@
     <groupId>br.com.ccs</groupId>
     <artifactId>ccs-boot</artifactId>
     <version>0.0.2-SNAPSHOT</version>
-    <packaging>jar</packaging> <!-- Definindo como JAR -->
+    <packaging>jar</packaging>
 
     <name>ccs-boot</name>
     <description>Custom boot framework for microservices</description>
@@ -22,7 +22,7 @@
 
     <developers>
         <developer>
-            <id>csouza</id>
+            <id>CSouza</id>
             <name>Cleber Souza</name>
             <url>https://github.com/ccs1201</url>
         </developer>
@@ -87,13 +87,6 @@
             <version>${logback-classic.version}</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -104,7 +97,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>${maven.compiler.source}</source> <!-- Certifique-se que a versão do Java é compatível -->
+                    <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>

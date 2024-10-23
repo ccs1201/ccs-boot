@@ -11,6 +11,7 @@ Este projeto implementa um servidor HTTP simples com suporte a injeção de depe
 - **Anotações** para mapear controladores e métodos HTTP:
   - `@Endpoint`: Marca classes de controladores
   - `@Endpoint.XXX`: Associa métodos HTTP a métodos dos controladores
+  - `@EndpointResponseCode`: Que define o código HTTP da response
 
 ### Tecnologias Utilizadas
 - **HttpServer** do Java (`com.sun.net.httpserver.HttpServer`)
@@ -44,14 +45,26 @@ Este projeto implementa um servidor HTTP simples com suporte a injeção de depe
 
 ## Como executar
 1. Clone o repositório.
-2. Execute o servidor utilizando os comandos padrão de compilação e execução em Java.
-3. O servidor estará disponível no contexto `/` e porta `8080`, pronto para receber requisições HTTP.
+2. Execute `mvn install` no terminal.
+3. Adicione como dependência no seu projeto.
+> ```xlm
+> <dependencies>
+> ...
+>    <dependency>
+>       <groupId>br.com.ccs</groupId>
+>       <artifactId>ccs-boot</artifactId>
+>       <version>0.0.2-SNAPSHOT</version>
+>    </dependency>
+> ...
+> </dependencies>
+4. servidor estará disponível no contexto `/` e porta `8080`, pronto para receber requisições HTTP.
 
 ## Dependências
 - **Java 21+**
 - **Weld (Jboss CDI)**
 - **Jackson**
 - **SLF4J**
+- **logback-classic**
 
 ### Siga-me no linkedin -> [CCS1201](https://www.linkedin.com/feed/update/urn:li:activity:7242648326699913219/)
 
@@ -71,6 +84,7 @@ This project implements a simple HTTP server with support for dependency injecti
 - **Annotations** to map controllers and HTTP methods:
   - `@Endpoint`: Marks controller classes
   - `@Endpoint.XXX`: Associates HTTP methods with controller methods
+  - `@EndpointResponseCode`: Which defines the HTTP response code
 
 ### Technologies Used
 - **HttpServer** from Java (`com.sun.net.httpserver.HttpServer`)
@@ -105,8 +119,19 @@ This project implements a simple HTTP server with support for dependency injecti
 
 ## How to Run
 1. Clone the repository.
-2. Run the server using standard Java build and execution commands.
-3. The server will be available at the `/` context and port `8080`, ready to handle HTTP requests.
+2. Run `mvn install`.
+3. Add as dependency in your project. 
+> ```xlm
+> <dependencies>
+> ...
+>    <dependency>
+>       <groupId>br.com.ccs</groupId>
+>       <artifactId>ccs-boot</artifactId>
+>       <version>0.0.2-SNAPSHOT</version>
+>    </dependency>
+> ...
+> </dependencies>
+4. The server will be available at the `/` context and port `8080`, ready to handle HTTP requests.
 
 ## Dependencies
 - **Java 21+**
@@ -116,5 +141,5 @@ This project implements a simple HTTP server with support for dependency injecti
 
 ### Follow-me on linkedin -> [CCS1201](https://www.linkedin.com/feed/update/urn:li:activity:7242648326699913219/)
 
-Contributions and suggestions are welcome!
+> Contributions and suggestions are welcome!
 
