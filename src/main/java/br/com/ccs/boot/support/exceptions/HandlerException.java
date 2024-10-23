@@ -1,4 +1,4 @@
-package br.com.ccs.boot.server.support.exceptions;
+package br.com.ccs.boot.support.exceptions;
 
 import br.com.ccs.boot.server.http.enums.HttpStatusCode;
 

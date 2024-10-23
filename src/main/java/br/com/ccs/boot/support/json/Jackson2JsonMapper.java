@@ -1,4 +1,4 @@
-package br.com.ccs.boot.server.support.json;
+package br.com.ccs.boot.support.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

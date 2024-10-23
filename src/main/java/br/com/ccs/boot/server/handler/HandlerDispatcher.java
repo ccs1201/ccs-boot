@@ -1,12 +1,13 @@
 package br.com.ccs.boot.server.handler;
 
-import br.com.ccs.boot.server.annotations.EndpointResponseCode;
+import br.com.ccs.boot.annotations.EndpointResponseCode;
+import br.com.ccs.boot.server.handler.wrapper.HandlerWrapper;
 import br.com.ccs.boot.server.http.enums.HttpMethod;
 import br.com.ccs.boot.server.http.enums.HttpStatusCode;
-import br.com.ccs.boot.server.support.exceptions.HandlerException;
-import br.com.ccs.boot.server.support.exceptions.RequestBodyExtractException;
-import br.com.ccs.boot.server.support.exceptions.ServerException;
-import br.com.ccs.boot.server.support.exceptions.UnsupportedMethodException;
+import br.com.ccs.boot.support.exceptions.HandlerException;
+import br.com.ccs.boot.support.exceptions.RequestBodyExtractException;
+import br.com.ccs.boot.support.exceptions.ServerException;
+import br.com.ccs.boot.support.exceptions.UnsupportedMethodException;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
