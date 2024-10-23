@@ -1,6 +1,7 @@
 package br.com.ccs.boot.annotations;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Stereotype;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -24,6 +25,7 @@ import java.lang.annotation.Target;
  * <p>Supported HTTP methods are: GET, POST, PUT, DELETE</p>
  * @since 23/09/2024
  */
+@Stereotype
 @ApplicationScoped
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

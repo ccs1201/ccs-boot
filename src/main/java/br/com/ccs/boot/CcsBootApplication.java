@@ -1,7 +1,6 @@
 package br.com.ccs.boot;
 
 import br.com.ccs.boot.server.ServerLauncher;
-import jakarta.enterprise.inject.se.SeContainer;
 import jakarta.enterprise.inject.se.SeContainerInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,7 @@ public class CcsBootApplication {
         try {
             // Inicializa o container CDI
             var initializer = SeContainerInitializer.newInstance();
-            initializer.addPackages(true, mainClass);
+            initializer.addPackages(true, mainClass.getPackage());
             var container = initializer.initialize();
             // Injeta o SimpleHttpServer via CDI
             var serverLauncher = container.select(ServerLauncher.class).get();
