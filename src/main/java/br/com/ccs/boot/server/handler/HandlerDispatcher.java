@@ -99,11 +99,11 @@ public class HandlerDispatcher implements HttpHandler {
 
         ServerException serverException = findServerException(exception);
         int code = HttpStatusCode.INTERNAL_SERVER_ERROR.getCode();
-        byte[] msg = "Internal Server Error".getBytes();
+        byte[] msg = "Internal Server Error".getBytes(StandardCharsets.UTF_8);
 
         if (serverException != null) {
             code = serverException.getStatusCode().getCode();
-            msg = serverException.getMessage().getBytes();
+            msg = serverException.getMessage().getBytes(StandardCharsets.UTF_8);
         }
 
         try (exchange) {
@@ -135,9 +135,9 @@ public class HandlerDispatcher implements HttpHandler {
 
     private static void sendResponseWithBody(HttpExchange exchange, int responseCode, String response) throws IOException {
         exchange.getResponseHeaders().add("Content-Type", "application/json");
-        exchange.sendResponseHeaders(responseCode, response.getBytes().length);
+        exchange.sendResponseHeaders(responseCode, response.getBytes(StandardCharsets.UTF_8).length);
         var os = exchange.getResponseBody();
-        os.write(response.getBytes());
+        os.write(response.getBytes(StandardCharsets.UTF_8));
         exchange.close();
     }
 
