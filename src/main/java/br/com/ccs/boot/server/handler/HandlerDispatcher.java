@@ -8,8 +8,7 @@ import br.com.ccs.boot.support.exceptions.HandlerException;
 import br.com.ccs.boot.support.exceptions.RequestBodyExtractException;
 import br.com.ccs.boot.support.exceptions.ServerException;
 import br.com.ccs.boot.support.exceptions.UnsupportedMethodException;
-import com.fasterxml.jackson.core.JacksonException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import br.com.ccs.boot.support.json.converter.ContentConverter;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -25,12 +24,12 @@ public class HandlerDispatcher implements HttpHandler {
 
     private final Logger log;
     private final HandlerResolver resolver;
-    private final ObjectMapper objectMapper;
+    private final ContentConverter converter;
 
     @Inject
-    public HandlerDispatcher(HandlerResolver resolver, ObjectMapper objectMapper, Logger log) {
+    public HandlerDispatcher(HandlerResolver resolver, ContentConverter converter, Logger log) {
         this.resolver = resolver;
-        this.objectMapper = objectMapper;
+        this.converter = converter;
         this.log = log;
     }
 
@@ -83,9 +82,9 @@ public class HandlerDispatcher implements HttpHandler {
         if (method.getParameters().length == 1) {
             var methodInputClass = method.getParameters()[0].getType();
             try {
-                var input = objectMapper.readValue(body, methodInputClass);
+                var input = converter.fromJson(body, methodInputClass);
                 return method.invoke(handler, input);
-            } catch (JacksonException e) {
+            } catch (RequestBodyExtractException e) {
                 throw new RequestBodyExtractException(e);
             }
         }
@@ -110,7 +109,7 @@ public class HandlerDispatcher implements HttpHandler {
             exchange.sendResponseHeaders(code, msg.length);
             exchange.getResponseBody().write(msg);
         } catch (IOException e) {
-            throw new HandlerException("Error sending error response", HttpStatusCode.INTERNAL_SERVER_ERROR, e);
+            throw new HandlerException("Error on sending error response", HttpStatusCode.INTERNAL_SERVER_ERROR, e);
         }
     }
 
@@ -130,9 +129,7 @@ public class HandlerDispatcher implements HttpHandler {
             sendResponseNoBody(exchange, responseCode);
             return;
         }
-
-        var response = objectMapper.writeValueAsString(returned);
-        sendResponseWithBody(exchange, responseCode, response);
+        sendResponseWithBody(exchange, responseCode, converter.toJson(returned));
     }
 
     private static void sendResponseWithBody(HttpExchange exchange, int responseCode, String response) throws IOException {
