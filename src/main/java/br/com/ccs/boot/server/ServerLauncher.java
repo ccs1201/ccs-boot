@@ -17,9 +17,10 @@ public class ServerLauncher {
     }
 
     public void start(Integer port, String contextPath) throws Exception {
+        var config = ServerConfig.defaults();
         if (Objects.nonNull(port) && Objects.nonNull(contextPath)) {
-            simpleHttpServer.start(new ServerConfig(port, contextPath));
+            config = new ServerConfig(port, contextPath);
         }
-        simpleHttpServer.start(ServerConfig.defaults());
+        simpleHttpServer.start(config);
     }
 }
