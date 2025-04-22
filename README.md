@@ -53,7 +53,7 @@ Este projeto implementa um servidor HTTP simples com suporte a injeção de depe
 >    <dependency>
 >       <groupId>br.com.ccs</groupId>
 >       <artifactId>ccs-boot</artifactId>
->       <version>0.0.2-SNAPSHOT</version>
+>       <version>0.0.3-SNAPSHOT</version>
 >    </dependency>
 > ...
 > </dependencies>
@@ -127,7 +127,7 @@ This project implements a simple HTTP server with support for dependency injecti
 >    <dependency>
 >       <groupId>br.com.ccs</groupId>
 >       <artifactId>ccs-boot</artifactId>
->       <version>0.0.2-SNAPSHOT</version>
+>       <version>0.0.3-SNAPSHOT</version>
 >    </dependency>
 > ...
 > </dependencies>
