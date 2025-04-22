@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 
 @ApplicationScoped
 public class HandlerDispatcher implements HttpHandler {
@@ -72,7 +73,7 @@ public class HandlerDispatcher implements HttpHandler {
 
     private static String extractRequestBody(HttpExchange exchange) {
         try {
-            return new String(exchange.getRequestBody().readAllBytes());
+            return new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RequestBodyExtractException(e);
         }

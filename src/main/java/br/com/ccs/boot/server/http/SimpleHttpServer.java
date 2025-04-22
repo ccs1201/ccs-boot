@@ -1,13 +1,14 @@
 package br.com.ccs.boot.server.http;
 
+import br.com.ccs.boot.server.ServerConfig;
 import br.com.ccs.boot.server.handler.HandlerDispatcher;
+import br.com.ccs.boot.support.exceptions.ServerConfigurationException;
 import com.sun.net.httpserver.HttpServer;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
@@ -29,20 +30,20 @@ public class SimpleHttpServer {
         this.log = log;
     }
 
-    public void start(int port, String contextPath) throws IOException {
+    public void start(ServerConfig config) throws Exception {
         log.info("Starting HTTP server");
-        configure(port, contextPath);
+        configure(config);
         server.start();
         log.info("Server started and listening on port: {}", server.getAddress().getPort());
     }
 
-    private void configure(int port, String contextPath) throws IOException {
-        if (contextPath == null || contextPath.isBlank()) {
-            contextPath = "/";
+    private void configure(ServerConfig config) throws Exception {
+        if (config.contextPath() == null || config.contextPath().isBlank()) {
+            throw new ServerConfigurationException("ContextPath must not be null.");
         }
 
-        server = HttpServer.create(new InetSocketAddress(port), 0);
-        server.createContext(contextPath, handlerDispatcher);
+        server = HttpServer.create(new InetSocketAddress(config.port()), 0);
+        server.createContext(config.contextPath(), handlerDispatcher);
         server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
     }
 
