@@ -9,6 +9,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 
+import java.text.DateFormat;
+
 public class Jackson2JsonMapper {
 
     private final Logger log;
@@ -21,11 +23,12 @@ public class Jackson2JsonMapper {
     @Produces
     @Singleton
     public ObjectMapper objectMapper() {
+        log.info("Initializing Jackson ObjectMapper...");
         final ObjectMapper objectMapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-                .registerModule(new JavaTimeModule());
-//                .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a z"));
+                .registerModule(new JavaTimeModule())
+                .setDateFormat(DateFormat.getDateTimeInstance());
         log.info("Jackson ObjectMapper initialized");
 
         return objectMapper;
