@@ -4,7 +4,6 @@ import br.com.ccs.boot.annotations.Endpoint;
 import br.com.ccs.boot.server.handler.wrapper.HandlerWrapper;
 import br.com.ccs.boot.support.exceptions.HandlerNotFoundException;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -29,16 +28,16 @@ public class HandlerResolver {
 
         // Registra controladores com base na anotação @EndpointController
         var map = new HashMap<String, HandlerWrapper>();
-        for (Bean<?> bean : beans) {
-            Class<?> clazz = bean.getBeanClass();
-            if (clazz.isAnnotationPresent(Endpoint.class)) {
-                String path = clazz.getAnnotation(Endpoint.class).value();
-                if (!path.startsWith("/")) {
-                    path = "/".concat(path);
-                }
-                map.put(path, HandlerWrapper.of(clazz, beanManager.getReference(bean, clazz, beanManager.createCreationalContext(bean))));
-            }
-        }
+
+        beans.stream()
+                .filter(bean -> bean.getBeanClass().isAnnotationPresent(Endpoint.class))
+                .forEach(bean -> {
+                    Class<?> clazz = bean.getBeanClass();
+                    Endpoint endpoint = clazz.getAnnotation(Endpoint.class);
+                    String path = endpoint.value().startsWith("/") ? endpoint.value() : "/" + endpoint.value();
+                    map.put(path, HandlerWrapper.of(clazz, beanManager.getReference(bean, clazz,
+                            beanManager.createCreationalContext(bean))));
+                });
         handlerMap = Collections.unmodifiableMap(map);
         log.info("HandlerResolver initialized with {} controllers.", handlerMap.size());
     }
