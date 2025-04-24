@@ -44,7 +44,7 @@ public class SimpleHttpServer {
 
         server = HttpServer.create(new InetSocketAddress(config.port()), 0);
         server.createContext(config.contextPath(), handlerDispatcher);
-        server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
+        server.setExecutor(Executors.newFixedThreadPool(200, Thread.ofVirtual().factory()));
     }
 
     public void stop() {
