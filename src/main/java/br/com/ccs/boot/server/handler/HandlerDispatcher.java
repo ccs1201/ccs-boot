@@ -29,15 +29,18 @@ public class HandlerDispatcher implements HttpHandler {
 
     @Inject
     public HandlerDispatcher(HandlerResolver resolver, ContentConverter converter, Logger log) {
+        log.info("Initializing HandlerDispatcher...");
         this.resolver = resolver;
         this.converter = converter;
         this.log = log;
+        log.info("HandlerDispatcher initialized");
     }
 
     @Override
     public void handle(HttpExchange exchange) {
         log.info("Requested URI: {} ", exchange.getRequestURI());
-        try {
+
+        try (exchange) {
             var handlerWrapper = resolver.resolve(exchange.getRequestURI());
             var method = methodResolver(handlerWrapper, exchange);
             var body = extractRequestBody(exchange);
@@ -106,7 +109,7 @@ public class HandlerDispatcher implements HttpHandler {
             msg = serverException.getMessage().getBytes(StandardCharsets.UTF_8);
         }
 
-        try (exchange) {
+        try {
             exchange.sendResponseHeaders(code, msg.length);
             exchange.getResponseBody().write(msg);
         } catch (IOException e) {
