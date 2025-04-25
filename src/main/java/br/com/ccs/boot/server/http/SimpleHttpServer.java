@@ -5,14 +5,14 @@ import br.com.ccs.boot.server.handler.HandlerDispatcher;
 import br.com.ccs.boot.support.exceptions.ServerConfigurationException;
 import com.sun.net.httpserver.HttpServer;
 import jakarta.annotation.PreDestroy;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
-@ApplicationScoped
+@Singleton
 public class SimpleHttpServer {
 
     private final Logger log;

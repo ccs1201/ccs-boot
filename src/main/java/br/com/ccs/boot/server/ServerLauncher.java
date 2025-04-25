@@ -1,12 +1,12 @@
 package br.com.ccs.boot.server;
 
 import br.com.ccs.boot.server.http.SimpleHttpServer;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.Objects;
 
-@ApplicationScoped
+@Singleton
 public class ServerLauncher {
 
     private final SimpleHttpServer simpleHttpServer;

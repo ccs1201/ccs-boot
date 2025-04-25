@@ -3,9 +3,9 @@ package br.com.ccs.boot.server.handler;
 import br.com.ccs.boot.annotations.Endpoint;
 import br.com.ccs.boot.server.handler.wrapper.HandlerWrapper;
 import br.com.ccs.boot.support.exceptions.HandlerNotFoundException;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 
 import java.net.URI;
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-@ApplicationScoped
+@Singleton
 public class HandlerResolver {
 
     private final Logger log;
