@@ -1,7 +1,7 @@
 package br.com.ccs.boot.annotations;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Stereotype;
+import jakarta.inject.Singleton;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * @since 23/09/2024
  */
 @Stereotype
-@ApplicationScoped
+@Singleton
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Endpoint {
