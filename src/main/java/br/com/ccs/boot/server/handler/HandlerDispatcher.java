@@ -11,8 +11,8 @@ import br.com.ccs.boot.support.exceptions.UnsupportedMethodException;
 import br.com.ccs.boot.support.json.converter.ContentConverter;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 
-@ApplicationScoped
+@Singleton
 public class HandlerDispatcher implements HttpHandler {
 
     private final Logger log;
@@ -40,7 +40,7 @@ public class HandlerDispatcher implements HttpHandler {
     public void handle(HttpExchange exchange) {
         log.info("Requested URI: {} ", exchange.getRequestURI());
 
-        try (exchange) {
+        try {
             var handlerWrapper = resolver.resolve(exchange.getRequestURI());
             var method = methodResolver(handlerWrapper, exchange);
             var body = extractRequestBody(exchange);
@@ -52,6 +52,8 @@ public class HandlerDispatcher implements HttpHandler {
 
         } catch (Exception e) {
             sendError(exchange, e);
+        } finally {
+            exchange.close();
         }
     }
 
