@@ -31,7 +31,6 @@ public class CcsBootApplication {
     }
 
     private static void waitForShutdown() throws InterruptedException {
-        // Registra um shutdown hook
         Runtime.getRuntime().addShutdownHook(new Thread(() ->
                 logger.info("Server shutting down...")
         ));
