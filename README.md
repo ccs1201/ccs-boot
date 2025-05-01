@@ -36,7 +36,7 @@ Este projeto implementa um servidor HTTP simples com suporte a injeção de depe
 ## Próximos Passos
 - **Conversão de bodies de Request**: ~~Implementar a conversão de JSON para objetos do tipo esperado nos parâmetros dos métodos dos controladores.~~
 - **Suporte a status codes**: ~~Implementar uma estratégia semelhante a `ResponseEntity` para permitir o retorno de status HTTP juntamente com a resposta.~~
-- **Testes de concorrência**: Validar o comportamento do servidor em cenários de múltiplas requisições simultâneas.
+- **Testes de concorrência**: --Validar o comportamento do servidor em cenários de múltiplas requisições simultâneas.--
 
 ## Melhorias Futuras
 - **Eliminar a necessidade de `EndpointController`**: ~~Procurar uma forma de utilizar o Weld para fornecer os controladores anotados diretamente, sem a necessidade de implementar a interface `EndpointController`.~~
@@ -109,7 +109,7 @@ This project implements a simple HTTP server with support for dependency injecti
 ## Next Steps
 - **Request body conversion**: ~~Implement JSON conversion to the expected object type for controller method parameters.~~
 - **Support for status codes**: ~~Implement a strategy similar to `ResponseEntity` to allow the return of HTTP status codes along with the response.~~
-- **Concurrency tests**: Validate the server's behavior under scenarios with multiple simultaneous requests.
+- **Concurrency tests**: --Validate the server's behavior under scenarios with multiple simultaneous requests.--
 
 ## Future Improvements
 - **Eliminate the need for `EndpointController`**: ~~Find a way to use Weld to directly provide annotated controllers without requiring the implementation of the `EndpointController` interface.~~
