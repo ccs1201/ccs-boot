@@ -31,7 +31,7 @@ Este projeto implementa um servidor HTTP simples com suporte a injeção de depe
 - **Conversão de bodies de Request**: Implementada a conversão de JSON para objetos do tipo esperado nos parâmetros dos métodos dos controladores.
 - **Suporte a status codes**: Implementada anotação `@EndpointResponseCode` para permitir o retorno de status HTTP juntamente com a resposta.
 - **Fixado o header `Content-Type`** para `apliccation/json` nas respostas.
-- **CcsBootCustomException** paa caso queira lançar exceções customizadas com um HTTP status especifico.
+- **CcsBootCustomException** para caso queira lançar exceções customizadas com um HTTP status especifico.
 
 ## Próximos Passos
 - **Conversão de bodies de Request**: ~~Implementar a conversão de JSON para objetos do tipo esperado nos parâmetros dos métodos dos controladores.~~
