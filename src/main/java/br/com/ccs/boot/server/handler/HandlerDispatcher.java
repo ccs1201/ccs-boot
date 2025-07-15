@@ -11,8 +11,6 @@ import br.com.ccs.boot.support.exceptions.UnsupportedMethodException;
 import br.com.ccs.boot.support.json.converter.ContentConverter;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -20,14 +18,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 
-@Singleton
 public class HandlerDispatcher implements HttpHandler {
 
     private final Logger log;
     private final HandlerResolver resolver;
     private final ContentConverter converter;
 
-    @Inject
     public HandlerDispatcher(HandlerResolver resolver, ContentConverter converter, Logger log) {
         log.info("Initializing HandlerDispatcher...");
         this.resolver = resolver;

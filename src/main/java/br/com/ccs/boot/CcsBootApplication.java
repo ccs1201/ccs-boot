@@ -10,18 +10,20 @@ public class CcsBootApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(CcsBootApplication.class);
 
-    public static void run(Class<?> mainClass, String[] args) {
+    public static void run(Class<?> mainClass, int port, String contextPath) {
 
         SeContainer container = null;
 
         try {
-            // Inicializa o container CDI
+            // Inicializa o container CDI apenas com os packages necessários
             var initializer = SeContainerInitializer.newInstance();
             initializer.addPackages(true, mainClass.getPackage());
+            initializer.addPackages(true, CcsBootApplication.class.getPackage());
+            initializer.disableDiscovery();
             container = initializer.initialize();
             // Injeta o SimpleHttpServer via CDI
             var serverLauncher = container.select(ServerLauncher.class).get();
-            serverLauncher.start(8080, "/");
+            serverLauncher.start(port, contextPath);
             waitForShutdown();
         } catch (Exception e) {
             logger.error("Server start fail", e);
@@ -32,7 +34,7 @@ public class CcsBootApplication {
 
     private static void waitForShutdown() throws InterruptedException {
         Runtime.getRuntime().addShutdownHook(new Thread(() ->
-                logger.info("Server shutting down...")
+                logger.info("Application shutting down...")
         ));
 
         Thread.currentThread().join();

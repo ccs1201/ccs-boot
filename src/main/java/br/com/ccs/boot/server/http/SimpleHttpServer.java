@@ -6,18 +6,17 @@ import br.com.ccs.boot.support.exceptions.ServerConfigurationException;
 import com.sun.net.httpserver.HttpServer;
 import jakarta.annotation.PreDestroy;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-@Singleton
 public class SimpleHttpServer {
 
-    private final Logger log;
+    private final Logger log = LoggerFactory.getLogger(SimpleHttpServer.class);
     private HttpServer server;
     private final HandlerDispatcher handlerDispatcher;
     private final ThreadPoolExecutor executor;
@@ -28,9 +27,8 @@ public class SimpleHttpServer {
     }
 
     @Inject
-    public SimpleHttpServer(HandlerDispatcher handlerDispatcher, Logger log) {
+    public SimpleHttpServer(HandlerDispatcher handlerDispatcher) {
         this.handlerDispatcher = handlerDispatcher;
-        this.log = log;
         executor = new ThreadPoolExecutor(
                 10,
                 200,
@@ -62,11 +60,16 @@ public class SimpleHttpServer {
         var executor = (ThreadPoolExecutor) server.getExecutor();
         if (executor != null) {
             try {
+                if (executor.getActiveCount() < 1) {
+                    executor.shutdownNow();
+                    return;
+                }
                 // Aguarda até 30 segundos para finalização das threads
                 if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
                     executor.shutdownNow();
                 }
             } catch (InterruptedException e) {
+                log.error("Error while shutting down the server", e);
                 executor.shutdownNow();
                 Thread.currentThread().interrupt();
             }

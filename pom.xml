@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>br.com.ccs</groupId>
     <artifactId>ccs-boot</artifactId>
-    <version>0.0.6-SNAPSHOT</version>
+    <version>0.0.7-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>ccs-boot</name>
@@ -35,7 +35,8 @@
         <jackson.version>2.17.2</jackson.version>
         <slf4j.version>2.0.16</slf4j.version>
         <logback-classic.version>1.5.13</logback-classic.version>
-        <weld.version>6.0.2.Final </weld.version>
+        <weld.version>6.0.2.Final</weld.version>
+        <jandex.version>3.2.2</jandex.version>
     </properties>
 
     <dependencies>
@@ -43,12 +44,6 @@
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-shaded</artifactId>
             <version>${weld.version}</version>
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>org.jboss.logging</groupId>-->
-<!--                    <artifactId>logging-parent</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -85,18 +80,10 @@
             <version>${logback-classic.version}</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
-            <scope>test</scope>
+            <groupId>io.smallrye</groupId>
+            <artifactId>jandex</artifactId>
+            <version>${jandex.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>5.14.2</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>

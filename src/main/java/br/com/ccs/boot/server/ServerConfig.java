@@ -4,7 +4,7 @@ public record ServerConfig(
         int port,
         String contextPath
 ) {
-    public static ServerConfig defaults() {
+    public static ServerConfig withDefaults() {
         return new ServerConfig(8080, "/");
     }
 }

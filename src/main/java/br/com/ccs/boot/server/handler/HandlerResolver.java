@@ -4,8 +4,6 @@ import br.com.ccs.boot.annotations.Endpoint;
 import br.com.ccs.boot.server.handler.wrapper.HandlerWrapper;
 import br.com.ccs.boot.support.exceptions.HandlerNotFoundException;
 import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 
 import java.net.URI;
@@ -13,13 +11,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-@Singleton
 public class HandlerResolver {
 
     private final Logger log;
     private final Map<String, HandlerWrapper> handlerMap;
 
-    @Inject
     public HandlerResolver(Logger log, BeanManager beanManager) {
         this.log = log;
         log.info("Initializing HandlerResolver...");
