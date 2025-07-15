@@ -10,9 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.util.Objects;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import static java.util.Objects.*;
 
 public class SimpleHttpServer {
 
@@ -46,7 +49,7 @@ public class SimpleHttpServer {
     }
 
     private void configure(ServerConfig config) throws Exception {
-        if (config.contextPath() == null || config.contextPath().isBlank()) {
+        if (isNull(config.contextPath()) || config.contextPath().isBlank()) {
             throw new ServerConfigurationException("ContextPath must not be null.");
         }
 
@@ -56,25 +59,27 @@ public class SimpleHttpServer {
     }
 
     public void stop() {
+        if (server == null) return;
+        
         log.info("Stopping HTTP server");
-        var executor = (ThreadPoolExecutor) server.getExecutor();
-        if (executor != null) {
+        
+        // Para o servidor primeiro
+        server.stop(0);
+        
+        // Depois para o executor
+        if (executor != null && !executor.isShutdown()) {
             try {
-                if (executor.getActiveCount() < 1) {
-                    executor.shutdownNow();
-                    return;
-                }
-                // Aguarda até 30 segundos para finalização das threads
-                if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
+                executor.shutdown();
+                if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
                     executor.shutdownNow();
                 }
             } catch (InterruptedException e) {
-                log.error("Error while shutting down the server", e);
+                log.error("Error while shutting down executor", e);
                 executor.shutdownNow();
                 Thread.currentThread().interrupt();
             }
         }
-        server.stop(0);
+        
         log.info("Server stopped");
     }
 }
