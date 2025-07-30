@@ -10,12 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
-import java.util.Objects;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static java.util.Objects.*;
+import static java.util.Objects.isNull;
 
 public class SimpleHttpServer {
 
@@ -60,12 +59,12 @@ public class SimpleHttpServer {
 
     public void stop() {
         if (server == null) return;
-        
+
         log.info("Stopping HTTP server");
-        
+
         // Para o servidor primeiro
         server.stop(0);
-        
+
         // Depois para o executor
         if (executor != null && !executor.isShutdown()) {
             try {
@@ -79,7 +78,7 @@ public class SimpleHttpServer {
                 Thread.currentThread().interrupt();
             }
         }
-        
+
         log.info("Server stopped");
     }
 }

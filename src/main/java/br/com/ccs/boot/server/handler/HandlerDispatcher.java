@@ -135,15 +135,18 @@ public class HandlerDispatcher implements HttpHandler {
     }
 
     private static void sendResponseWithBody(HttpExchange exchange, int responseCode, String response) throws IOException {
-        exchange.getResponseHeaders().add("Content-Type", "application/json");
-        exchange.sendResponseHeaders(responseCode, response.getBytes(StandardCharsets.UTF_8).length);
-        var os = exchange.getResponseBody();
-        os.write(response.getBytes(StandardCharsets.UTF_8));
-        exchange.close();
+        try (exchange) {
+            exchange.getResponseHeaders().add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(responseCode, response.getBytes(StandardCharsets.UTF_8).length);
+            var os = exchange.getResponseBody();
+            os.write(response.getBytes(StandardCharsets.UTF_8));
+            os.close();
+        }
     }
 
     private static void sendResponseNoBody(HttpExchange exchange, int responseCode) throws IOException {
-        exchange.sendResponseHeaders(responseCode, -1);
-        exchange.close();
+        try (exchange) {
+            exchange.sendResponseHeaders(responseCode, 0);
+        }
     }
 }
